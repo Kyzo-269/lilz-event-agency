@@ -1,0 +1,260 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================
+   VARIABLES — THÈME COMORIEN
+   ============================ */
+:root {
+  --bg-dark:    #0a0a0a;
+  --bg-card:    #111111;
+  --border:     #1f3d25;
+  --green:      #009A44;
+  --blue:       #1E90FF;
+  --red:        #E4002B;
+  --gold:       #FFD700;
+  --font-inter: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ============================
+   BASE
+   ============================ */
+@layer base {
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    touch-action: manipulation;
+    overscroll-behavior: none;
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    color: #f0f0f0;
+    font-family: var(--font-inter);
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Barre de sécurité iPhone */
+  .safe-top    { padding-top: env(safe-area-inset-top); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+  .safe-left   { padding-left: env(safe-area-inset-left); }
+  .safe-right  { padding-right: env(safe-area-inset-right); }
+
+  /* Scrollbar fine et discrète */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1f3d25; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #009A44; }
+
+  /* Inputs date/select — cohérence couleurs */
+  input[type="date"],
+  input[type="time"],
+  select {
+    color-scheme: dark;
+  }
+}
+
+/* ============================
+   LIGHT MODE — OVERRIDES
+   ============================ */
+
+/* Fond général et texte */
+html[data-theme="light"] body {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
+
+/* ── Wrapper racine de chaque page (div direct enfant de body) ── */
+html[data-theme="light"] body > div {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
+
+/* En-têtes de pages (sticky headers) */
+html[data-theme="light"] header {
+  background-color: rgba(255, 255, 255, 0.97) !important;
+  border-bottom-color: #e0e8e2 !important;
+}
+html[data-theme="light"] header p {
+  color: #111 !important;
+}
+html[data-theme="light"] header button {
+  border-color: #d0ddd4 !important;
+  color: #666 !important;
+}
+
+/* Footer */
+html[data-theme="light"] footer {
+  background-color: #ffffff !important;
+  border-top-color: #e0e8e2 !important;
+}
+html[data-theme="light"] footer p {
+  color: #888 !important;
+}
+
+/* BottomNav */
+html[data-theme="light"] nav {
+  background-color: rgba(255, 255, 255, 0.97) !important;
+  border-top-color: #e0e8e2 !important;
+}
+
+/* Main layout */
+html[data-theme="light"] main {
+  background-color: #ffffff !important;
+}
+
+/* Inputs et selects */
+html[data-theme="light"] input:not([type="checkbox"]),
+html[data-theme="light"] select,
+html[data-theme="light"] textarea {
+  background-color: #fafafa !important;
+  border-color: #d8e4dc !important;
+  color: #111 !important;
+}
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder {
+  color: #bbb !important;
+}
+
+/* Classe Tailwind .input */
+html[data-theme="light"] .input {
+  background-color: #fafafa !important;
+  border-color: #d8e4dc !important;
+  color: #111 !important;
+}
+
+/* Bouton connexion reste vert vif */
+html[data-theme="light"] .btn-primary {
+  background-color: #009A44 !important;
+}
+
+/* ============================
+   ANIMATIONS
+   ============================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pulseRed {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+@keyframes skeleton {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes spinCW {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================
+   UTILITAIRES D'ANIMATION
+   ============================ */
+.animate-fade-in-up { animation: fadeInUp 0.4s ease-out both; }
+.animate-fade-in    { animation: fadeIn   0.3s ease-out both; }
+.animate-slide-up   { animation: slideUp  0.35s ease-out both; }
+.blink              { animation: blink 1.4s ease-in-out infinite; }
+.notif-pulse        { animation: pulseRed 1.2s ease-in-out infinite; }
+
+/* Spinner de chargement */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spinCW 0.7s linear infinite;
+  vertical-align: middle;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, #161616 25%, #202020 50%, #161616 75%);
+  background-size: 200% 100%;
+  animation: skeleton 1.6s ease-in-out infinite;
+  border-radius: 8px;
+  color: transparent !important;
+}
+
+/* ============================
+   COMPOSANTS RÉUTILISABLES
+   ============================ */
+@layer components {
+
+  /* Carte générique */
+  .card {
+    @apply bg-[#111111] border border-[#1f3d25] rounded-2xl p-4;
+  }
+
+  /* Bouton principal — vert */
+  .btn-primary {
+    @apply w-full py-3 px-6 rounded-xl font-semibold text-white
+           bg-[#009A44] hover:bg-[#00b350]
+           active:scale-[0.97] transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed
+           flex items-center justify-center gap-2;
+  }
+
+  /* Bouton secondaire — contour vert */
+  .btn-secondary {
+    @apply py-2 px-4 rounded-xl font-medium text-[#009A44]
+           border border-[#1f3d25] hover:bg-[#009A44]/10 hover:border-[#009A44]/50
+           active:scale-[0.97] transition-all duration-150;
+  }
+
+  /* Champ de saisie */
+  .input {
+    @apply w-full px-4 py-3 rounded-xl bg-[#0d0d0d] border border-[#1f3d25]
+           text-white placeholder-gray-600
+           focus:outline-none focus:border-[#009A44] focus:ring-2 focus:ring-[#009A44]/20
+           transition-all duration-200;
+  }
+
+  /* Label de formulaire */
+  .label {
+    @apply block text-sm font-medium text-gray-400 mb-1.5;
+  }
+
+  /* Badge de rôle */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  /* Carte module du dashboard */
+  .module-card {
+    @apply relative overflow-hidden bg-[#0e1a11] border border-[#1f3d25] rounded-2xl p-4
+           flex flex-col gap-3 no-underline
+           transition-all duration-200
+           hover:border-[#009A44]/70 hover:bg-[#0f1f13] hover:-translate-y-0.5
+           active:scale-[0.97];
+  }
+
+  /* Séparateur décoratif */
+  .comorian-stripe {
+    @apply flex h-0.5 flex-shrink-0;
+  }
+}

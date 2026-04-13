@@ -1,0 +1,73 @@
+# ============================================================
+# LIL'Z EVENT AGENCY — .gitignore
+# ============================================================
+
+# ── Dépendances ──────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# ── Next.js ──────────────────────────────────────────────────
+.next/
+out/
+build/
+dist/
+
+# ── Variables d'environnement (NE JAMAIS COMMIT !) ───────────
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+# Garder .env.example (template sans secrets)
+!.env.example
+
+# ── Vercel ────────────────────────────────────────────────────
+.vercel/
+
+# ── TypeScript ────────────────────────────────────────────────
+*.tsbuildinfo
+next-env.d.ts
+
+# ── Logs ─────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── Éditeurs & IDE ────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# ── Claude Code (mémoire et session locale) ──────────────────
+.claude/
+
+# ── Scripts personnels Windows ────────────────────────────────
+restart.ps1
+*.ps1
+
+# ── Divers ───────────────────────────────────────────────────
+.cache/
+.parcel-cache/
+coverage/
+.nyc_output/

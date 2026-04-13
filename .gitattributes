@@ -1,0 +1,29 @@
+# ── Normalisation des fins de ligne ──────────────────────────
+# Tous les fichiers texte → LF dans le repo, conversion auto selon l'OS
+* text=auto eol=lf
+
+# Fichiers explicitement texte
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.js   text eol=lf
+*.jsx  text eol=lf
+*.json text eol=lf
+*.css  text eol=lf
+*.md   text eol=lf
+*.sql  text eol=lf
+*.html text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.env.example text eol=lf
+
+# Fichiers binaires — pas de conversion
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary
