@@ -84,7 +84,7 @@ self.addEventListener("push", (event) => {
       body: data.body,
       icon: data.icon,
       badge: "/icons/icon-72.png",
-      tag: "lilz-notif",
+      tag: data.tag || "lilz-notif",
       renotify: true,
       vibrate: [200, 100, 200],
       data: { url: data.url },

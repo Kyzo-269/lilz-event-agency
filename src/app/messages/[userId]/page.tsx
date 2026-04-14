@@ -117,8 +117,9 @@ export default function ConversationPage() {
   const longPressRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isRecording  = useRef(false);
 
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const inputRef  = useRef<HTMLInputElement>(null);
+  const bottomRef        = useRef<HTMLDivElement>(null);
+  const inputRef         = useRef<HTMLInputElement>(null);
+  const lastMsgTs        = useRef<string>("");
 
   // ── Fetch initial ─────────────────────────────────────────
   const fetchAll = useCallback(async () => {
@@ -189,6 +190,51 @@ export default function ConversationPage() {
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [supabase, me, other, otherId]);
+
+  // ── Garde lastMsgTs à jour (pour le polling) ──────────────
+  useEffect(() => {
+    const confirmed = messages.filter(m => !m.id.startsWith("tmp-"));
+    if (confirmed.length > 0) {
+      lastMsgTs.current = confirmed[confirmed.length - 1].created_at;
+    }
+  }, [messages]);
+
+  // ── Polling fallback (si Realtime non activé dans Supabase) ─
+  // Récupère uniquement les messages plus récents que le dernier connu
+  useEffect(() => {
+    if (!me) return;
+    const poll = setInterval(async () => {
+      const ts = lastMsgTs.current;
+      if (!ts) return;
+      let query = supabase
+        .from("direct_messages")
+        .select("*")
+        .or(
+          `and(sender_id.eq.${me.id},receiver_id.eq.${otherId}),` +
+          `and(sender_id.eq.${otherId},receiver_id.eq.${me.id})`
+        )
+        .gt("created_at", ts)
+        .order("created_at", { ascending: true });
+      const { data } = await query;
+      if (!data || data.length === 0) return;
+      setMsgs(prev => {
+        const existingIds = new Set(prev.map(m => m.id));
+        const fresh = (data as DirectMessage[]).filter(m => !existingIds.has(m.id));
+        if (fresh.length === 0) return prev;
+        // Marquer les messages reçus comme lus
+        fresh
+          .filter(m => m.sender_id === otherId)
+          .forEach(m =>
+            supabase.from("direct_messages")
+              .update({ read_at: new Date().toISOString() })
+              .eq("id", m.id)
+          );
+        if (fresh.some(m => m.sender_id === otherId)) playNotifSound();
+        return [...prev, ...fresh];
+      });
+    }, 3000);
+    return () => clearInterval(poll);
+  }, [supabase, me, otherId]);
 
   // ── Envoi texte ───────────────────────────────────────────
   async function sendText() {

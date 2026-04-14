@@ -119,8 +119,7 @@ export default function PlanningPage() {
   const [view, setView]             = useState<View>("liste");
   const [weekOffset, setWeekOffset] = useState(0);
   const [filterDate, setFilterDate] = useState("");
-  const [draggedId, setDraggedId]   = useState<string | null>(null);
-  const [dragOverDate, setDragOverDate] = useState<string | null>(null);
+  const [movingId, setMovingId] = useState<string | null>(null);
   const notifTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   // Formulaire
@@ -193,22 +192,26 @@ export default function PlanningPage() {
   const alertes = entries.filter(e => isAlerte(e));
   const weekDates = getWeekDates(weekOffset);
 
-  // ── Drag & Drop ───────────────────────────────────────────────
-  function handleDragStart(id: string) { setDraggedId(id); }
-  function handleDragOver(e: React.DragEvent, date: string) {
-    e.preventDefault();
-    setDragOverDate(date);
-  }
-  function handleDragLeave() { setDragOverDate(null); }
-  async function handleDrop(targetDate: string) {
-    setDragOverDate(null);
-    if (!draggedId) return;
-    const entry = entries.find(e => e.id === draggedId);
-    if (!entry || entry.date === targetDate) { setDraggedId(null); return; }
-    // Mise à jour optimiste
-    setEntries(prev => prev.map(e => e.id === draggedId ? { ...e, date: targetDate } : e));
-    await supabase.from("planning").update({ date: targetDate }).eq("id", draggedId);
-    setDraggedId(null);
+  // ── Déplacer un poste d'un jour à l'autre (boutons ← →) ─────
+  async function moveEntry(id: string, direction: -1 | 1) {
+    if (movingId) return;
+    const entry = entries.find(e => e.id === id);
+    if (!entry) return;
+    setMovingId(id);
+    const idx = weekDates.indexOf(entry.date);
+    let newDate: string;
+    if (idx !== -1) {
+      const ni = idx + direction;
+      if (ni < 0 || ni >= weekDates.length) { setMovingId(null); return; }
+      newDate = weekDates[ni];
+    } else {
+      const d = new Date(entry.date + "T00:00:00");
+      d.setDate(d.getDate() + direction);
+      newDate = d.toISOString().slice(0, 10);
+    }
+    setEntries(prev => prev.map(e => e.id === id ? { ...e, date: newDate } : e));
+    await supabase.from("planning").update({ date: newDate }).eq("id", id);
+    setMovingId(null);
   }
 
   // ── Soumission formulaire ─────────────────────────────────────
@@ -275,43 +278,69 @@ export default function PlanningPage() {
     const roleClr = getRoleColor(entry.assigne_role);
     const borderColor = alerte ? "#E4002B" : actif ? "#009A44" : "#1f3d25";
     return (
-      <div
-        draggable={canEdit}
-        onDragStart={() => handleDragStart(entry.id)}
-        style={{
-          backgroundColor: alerte ? T.alertBg : actif ? T.activeBg : T.card,
-          border: `1px solid ${borderColor}`,
-          borderLeft: `3px solid ${roleClr}`,
-          borderRadius: 10,
-          padding: compact ? "6px 8px" : 12,
-          cursor: canEdit ? "grab" : "default",
-          opacity: draggedId === entry.id ? 0.4 : 1,
-        }}>
-        {/* Heure */}
-        <p style={{ fontSize: compact ? 11 : 13, fontWeight: 900, color: actif ? "#009A44" : alerte ? "#ff6b6b" : "#FFD700", margin: 0, fontVariantNumeric: "tabular-nums" }}>
+      <div style={{
+        backgroundColor: alerte ? T.alertBg : actif ? T.activeBg : T.card,
+        border: `1px solid ${borderColor}`,
+        borderLeft: `3px solid ${roleClr}`,
+        borderRadius: 10,
+        padding: compact ? "5px 6px" : 12,
+        overflow: "hidden",
+        width: "100%",
+        boxSizing: "border-box",
+        minWidth: 0,
+      }}>
+        {/* Heure + badge statut */}
+        <p style={{ fontSize: compact ? 10 : 13, fontWeight: 900, color: actif ? "#009A44" : alerte ? "#ff6b6b" : "#FFD700", margin: 0, fontVariantNumeric: "tabular-nums", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {fmtTime(entry.heure_debut)}–{fmtTime(entry.heure_fin)}
-          {actif && <span style={{ marginLeft: 6, fontSize: 8, backgroundColor: "#009A44", color: "#fff", padding: "1px 5px", borderRadius: 999 }}>EN COURS</span>}
-          {alerte && !actif && <span style={{ marginLeft: 6, fontSize: 8, backgroundColor: "#E4002B", color: "#fff", padding: "1px 5px", borderRadius: 999 }}>BIENTÔT</span>}
         </p>
+        {(actif || alerte) && (
+          <span style={{ fontSize: compact ? 7 : 8, backgroundColor: actif ? "#009A44" : "#E4002B", color: "#fff", padding: "1px 5px", borderRadius: 999, display: "inline-block", marginBottom: compact ? 2 : 0, marginTop: compact ? 0 : 1 }}>
+            {actif ? "EN COURS" : "BIENTÔT"}
+          </span>
+        )}
         {/* Nom */}
-        <p style={{ fontSize: compact ? 11 : 13, fontWeight: 700, color: T.txt, margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <p style={{ fontSize: compact ? 10 : 13, fontWeight: 700, color: T.txt, margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {entry.assigne_nom}
         </p>
         {/* Badges */}
-        <div style={{ display: "flex", gap: 4, marginTop: 3, flexWrap: "wrap", alignItems: "center" }}>
-          <span style={{ fontSize: 9, color: roleClr, backgroundColor: roleClr + "18", padding: "1px 6px", borderRadius: 5, border: `1px solid ${roleClr}44`, fontWeight: 700 }}>
-            {entry.assigne_role.replace("Régisseur de production", "Rég.")}
-          </span>
-          <span style={{ fontSize: 9, color: "#009A44", backgroundColor: isDark ? "#1a2a1a" : "rgba(0,154,68,0.08)", padding: "1px 6px", borderRadius: 5, border: `1px solid ${T.brd}` }}>
+        {!compact && (
+          <div style={{ display: "flex", gap: 4, marginTop: 3, flexWrap: "wrap", alignItems: "center" }}>
+            <span style={{ fontSize: 9, color: roleClr, backgroundColor: roleClr + "18", padding: "1px 6px", borderRadius: 5, border: `1px solid ${roleClr}44`, fontWeight: 700 }}>
+              {entry.assigne_role.replace("Régisseur de production", "Rég.")}
+            </span>
+            <span style={{ fontSize: 9, color: "#009A44", backgroundColor: isDark ? "#1a2a1a" : "rgba(0,154,68,0.08)", padding: "1px 6px", borderRadius: 5, border: `1px solid ${T.brd}` }}>
+              {entry.poste}
+            </span>
+          </div>
+        )}
+        {compact && (
+          <p style={{ fontSize: 9, color: "#009A44", margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {entry.poste}
-          </span>
-        </div>
-        {/* Actions (mode liste seulement) */}
+          </p>
+        )}
+        {/* Actions */}
         {!compact && canEdit && (
           <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 6 }}>
             <button onClick={() => handleDelete(entry.id, entry.assigne_nom)}
               style={{ fontSize: 12, color: T.sub, border: `1px solid ${T.brd}`, backgroundColor: "transparent", borderRadius: 7, padding: "4px 8px", cursor: "pointer" }}>
               🗑️
+            </button>
+          </div>
+        )}
+        {/* Boutons déplacement (calendrier uniquement) */}
+        {compact && canEdit && (
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4, gap: 2 }}>
+            <button
+              onClick={e => { e.stopPropagation(); moveEntry(entry.id, -1); }}
+              disabled={movingId === entry.id}
+              style={{ flex: 1, fontSize: 12, background: "none", border: `1px solid ${T.brd}`, color: T.sub, borderRadius: 4, padding: "2px 0", cursor: "pointer", lineHeight: 1 }}>
+              ←
+            </button>
+            <button
+              onClick={e => { e.stopPropagation(); moveEntry(entry.id, 1); }}
+              disabled={movingId === entry.id}
+              style={{ flex: 1, fontSize: 12, background: "none", border: `1px solid ${T.brd}`, color: T.sub, borderRadius: 4, padding: "2px 0", cursor: "pointer", lineHeight: 1 }}>
+              →
             </button>
           </div>
         )}
@@ -549,28 +578,25 @@ export default function PlanningPage() {
 
             {/* Grille 7 jours avec scroll horizontal */}
             <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
-              <div style={{ display: "flex", gap: 6, minWidth: weekDates.length * 120 }}>
+              <div style={{ display: "flex", gap: 6, minWidth: weekDates.length * 118 }}>
                 {weekDates.map((date, dayIdx) => {
                   const dayEntries = entries
                     .filter(e => e.date === date)
                     .sort((a, b) => a.heure_debut.localeCompare(b.heure_debut));
                   const isToday = date === today;
-                  const isDropTarget = dragOverDate === date;
 
                   return (
                     <div
                       key={date}
-                      onDragOver={e => handleDragOver(e, date)}
-                      onDragLeave={handleDragLeave}
-                      onDrop={() => handleDrop(date)}
                       style={{
-                        flex: "0 0 120px",
-                        backgroundColor: isDropTarget ? (isDark ? "#001a0d" : "rgba(0,154,68,0.08)") : isToday ? (isDark ? "#0d1a10" : "rgba(0,154,68,0.04)") : T.card,
-                        border: `1px solid ${isDropTarget ? "#009A44" : isToday ? "#1f5c30" : T.brd}`,
+                        flex: "0 0 112px",
+                        minWidth: 0,
+                        backgroundColor: isToday ? (isDark ? "#0d1a10" : "rgba(0,154,68,0.04)") : T.card,
+                        border: `1px solid ${isToday ? "#1f5c30" : T.brd}`,
                         borderRadius: 12,
                         minHeight: 180,
-                        padding: 8,
-                        transition: "background-color 0.1s, border-color 0.1s",
+                        padding: 6,
+                        overflow: "hidden",
                       }}>
                       {/* En-tête jour */}
                       <div style={{ textAlign: "center", marginBottom: 8, paddingBottom: 6, borderBottom: `1px solid ${isToday ? "#1f5c30" : T.brd}` }}>
@@ -591,9 +617,7 @@ export default function PlanningPage() {
                           <EntryCard key={entry.id} entry={entry} compact />
                         ))}
                         {dayEntries.length === 0 && (
-                          <p style={{ fontSize: 10, color: T.muted, textAlign: "center", padding: "12px 0" }}>
-                            {canEdit ? "Déposer ici" : "—"}
-                          </p>
+                          <p style={{ fontSize: 10, color: T.muted, textAlign: "center", padding: "12px 0" }}>—</p>
                         )}
                       </div>
                     </div>
@@ -604,7 +628,7 @@ export default function PlanningPage() {
 
             {canEdit && (
               <p style={{ fontSize: 10, color: T.sub, textAlign: "center", marginTop: 10 }}>
-                💡 Glissez une carte d&apos;un jour à l&apos;autre pour déplacer un poste
+                💡 Utilisez ← → sur chaque carte pour déplacer un poste
               </p>
             )}
           </div>
