@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import BottomNav from "@/components/ui/BottomNav";
 import { useTheme } from "@/lib/ThemeProvider";
+import { sendPushTo } from "@/hooks/usePushNotifications";
 
 // ── Types ─────────────────────────────────────────────────────
 type Statut = "En préparation" | "Confirmé" | "En cours" | "Terminé";
@@ -212,6 +213,14 @@ export default function EvenementsPage() {
             event_id: newEv.id, texte, done: false, status: "todo", created_by: user.id,
           }))
         );
+        sendPushTo({
+          toAll: true,
+          excludeUserId: user.id,
+          title: `Nouvel événement — ${fNom.trim()}`,
+          body: `${fDate} · ${fLieu.trim()}`,
+          url: "/evenements",
+          tag: "new-event",
+        });
       }
     }
     resetForm();

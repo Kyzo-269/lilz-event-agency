@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import BottomNav from "@/components/ui/BottomNav";
 import { useTheme } from "@/lib/ThemeProvider";
+import { sendPushTo } from "@/hooks/usePushNotifications";
 
 // ── Types ─────────────────────────────────────────────────────
 interface PlanningEntry {
@@ -228,6 +229,13 @@ export default function PlanningPage() {
       notes: fNotes.trim() || null, created_by: user.id,
     });
     if (error) { setFormError(error.message); setSubmitting(false); return; }
+    sendPushTo({
+      userId: fAssigneId,
+      title: "Nouveau poste assigné",
+      body: `${fPoste} · ${fDate} · ${fDebut}–${fFin}`,
+      url: "/planning",
+      tag: `planning-${fAssigneId}`,
+    });
     setFAssigneId(""); setFPoste(POSTES[0]); setFNotes("");
     setShowForm(false);
     await fetchAll();

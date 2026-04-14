@@ -146,6 +146,7 @@ export default function MessagesListPage() {
   function previewMsg(msg: DirectMessage) {
     if (msg.media_type === "image") return "📷 Photo";
     if (msg.media_type === "audio") return "🎤 Message vocal";
+    if (!msg.content) return "";
     return msg.content.length > 40 ? msg.content.slice(0, 40) + "…" : msg.content;
   }
 

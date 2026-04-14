@@ -239,8 +239,10 @@ export default function FinancesPage() {
 
   async function handleDelete(id: string, libelle: string) {
     if (!confirm(`Supprimer "${libelle}" ?`)) return;
-    setEntries(prev => prev.filter(e => e.id !== id));
-    await supabase.from("finances").delete().eq("id", id);
+    const prev = entries;
+    setEntries(p => p.filter(e => e.id !== id));
+    const { error } = await supabase.from("finances").delete().eq("id", id);
+    if (error) setEntries(prev);
   }
 
   const { theme } = useTheme();

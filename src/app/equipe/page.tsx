@@ -86,9 +86,15 @@ export default function EquipePage() {
     const { data } = await supabase
       .from("profiles")
       .select("id, full_name, role, email, last_seen, statut_presence")
-      .order("role")
-      .order("full_name");
-    if (data) setMembers(data as Member[]);
+      .order("role", { ascending: true });
+    if (data) {
+      const sorted = [...(data as Member[])].sort((a, b) => {
+        if (a.role < b.role) return -1;
+        if (a.role > b.role) return 1;
+        return (a.full_name ?? "").localeCompare(b.full_name ?? "");
+      });
+      setMembers(sorted);
+    }
     setLoading(false);
   }, [supabase]);
 
@@ -120,11 +126,12 @@ export default function EquipePage() {
   async function changeStatut(statut: StatutPresence) {
     if (!currentUserId) return;
     setUpdatingStatus(true);
-    // Mise à jour optimiste
+    const prevStatut = members.find(m => m.id === currentUserId)?.statut_presence ?? "Hors ligne";
     setMembers(prev => prev.map(m => m.id === currentUserId ? { ...m, statut_presence: statut } : m));
-    await supabase.from("profiles")
+    const { error } = await supabase.from("profiles")
       .update({ statut_presence: statut, last_seen: new Date().toISOString() })
       .eq("id", currentUserId);
+    if (error) setMembers(prev => prev.map(m => m.id === currentUserId ? { ...m, statut_presence: prevStatut } : m));
     setUpdatingStatus(false);
   }
 
