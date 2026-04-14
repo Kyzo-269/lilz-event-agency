@@ -33,9 +33,9 @@ export default function LoginPage() {
       return;
     }
 
-    // Demander la permission de notifications push après connexion
-    // (iOS 16.4+ PWA seulement — silencieux si non supporté)
-    setupPushNotifications().catch(() => {});
+    // Enregistrer la subscription push AVANT de naviguer
+    // (iOS 16.4+ PWA — doit rester dans le contexte du geste utilisateur)
+    await setupPushNotifications().catch(() => {});
 
     router.push("/dashboard");
     router.refresh();

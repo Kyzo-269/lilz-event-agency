@@ -18,26 +18,31 @@ export function isPushSupported(): boolean {
 
 // ── Demande la permission + abonne l'appareil ────────────────
 export async function setupPushNotifications(): Promise<boolean> {
-  if (!isPushSupported()) return false;
+  if (!isPushSupported()) {
+    console.log("[push] Non supporté sur ce navigateur/appareil");
+    return false;
+  }
 
   const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
   if (!vapidKey) {
-    console.warn("[push] NEXT_PUBLIC_VAPID_PUBLIC_KEY manquante");
+    console.error("[push] NEXT_PUBLIC_VAPID_PUBLIC_KEY manquante — vérifier .env.local et Vercel");
     return false;
   }
 
   try {
-    // 1. Demander la permission
+    // 1. Demander la permission (doit être dans un contexte user-gesture)
     const permission = await Notification.requestPermission();
+    console.log("[push] Permission :", permission);
     if (permission !== "granted") return false;
 
     // 2. Attendre le service worker
     const reg = await navigator.serviceWorker.ready;
+    console.log("[push] Service worker prêt :", reg.scope);
 
     // 3. Vérifier si déjà abonné
     const existing = await reg.pushManager.getSubscription();
     if (existing) {
-      // Déjà abonné — re-synchroniser avec le serveur au cas où
+      console.log("[push] Abonnement existant — re-synchronisation");
       await saveSubscription(existing);
       return true;
     }
@@ -47,14 +52,14 @@ export async function setupPushNotifications(): Promise<boolean> {
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(vapidKey),
     });
+    console.log("[push] Nouvel abonnement créé :", sub.endpoint.slice(0, 60) + "…");
 
-    // 5. Sauvegarder dans Supabase via l'API route
+    // 5. Sauvegarder dans Supabase
     await saveSubscription(sub);
     return true;
 
   } catch (err) {
-    // iOS < 16.4, navigateur non compatible, ou permission refusée
-    console.warn("[push] Abonnement impossible :", err);
+    console.error("[push] Erreur lors de l'abonnement :", err);
     return false;
   }
 }
@@ -62,7 +67,7 @@ export async function setupPushNotifications(): Promise<boolean> {
 // ── Sauvegarde l'abonnement côté serveur ─────────────────────
 async function saveSubscription(sub: PushSubscription): Promise<void> {
   try {
-    await fetch("/api/push/subscribe", {
+    const res = await fetch("/api/push/subscribe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -70,8 +75,14 @@ async function saveSubscription(sub: PushSubscription): Promise<void> {
         userAgent: navigator.userAgent,
       }),
     });
+    const json = await res.json();
+    if (!res.ok) {
+      console.error("[push] Erreur sauvegarde abonnement :", json);
+    } else {
+      console.log("[push] ✓ Abonnement sauvegardé en base");
+    }
   } catch (err) {
-    console.warn("[push] Impossible de sauvegarder l'abonnement :", err);
+    console.error("[push] Impossible de sauvegarder l'abonnement :", err);
   }
 }
 
@@ -88,6 +99,7 @@ export async function unsubscribePush(): Promise<void> {
       body: JSON.stringify({ endpoint: sub.endpoint }),
     });
     await sub.unsubscribe();
+    console.log("[push] Désabonnement effectué");
   } catch (err) {
     console.warn("[push] Désabonnement impossible :", err);
   }
@@ -104,7 +116,7 @@ export async function sendPushTo(params: {
   tag?: string;
 }): Promise<void> {
   try {
-    await fetch("/api/push/send", {
+    const res = await fetch("/api/push/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -119,8 +131,13 @@ export async function sendPushTo(params: {
         },
       }),
     });
+    const json = await res.json();
+    if (!res.ok) {
+      console.warn("[push] Erreur envoi :", json);
+    } else {
+      console.log(`[push] ✓ ${json.sent ?? "?"} notification(s) envoyée(s)`);
+    }
   } catch (err) {
-    // Silencieux côté client — la notification n'est pas critique
     console.warn("[push] Envoi impossible :", err);
   }
 }
