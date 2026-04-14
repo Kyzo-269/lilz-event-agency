@@ -184,16 +184,17 @@ export default function NotesPage() {
       setReplyTarget(null); setAudioBlob(null); setPhotoFile(null); setPhotoPreview(null);
       await fetchAll();
 
-      // Notification push pour les notes URGENTES → tous les membres sauf l'expéditeur
-      if (isUrgent) {
+      // Notification push → tous les membres sauf l'expéditeur
+      {
         const preview = content.trim().slice(0, 80) || (audioBlob ? "Message vocal" : "Photo");
+        const body = preview.length < content.trim().length ? preview + "…" : preview;
         sendPushTo({
           toAll: true,
           excludeUserId: user.id,
-          title: `🚨 URGENT — ${userName}`,
-          body: preview.length < content.trim().length ? preview + "…" : preview,
+          title: isUrgent ? `🚨 URGENT — ${userName}` : `💬 ${userName}`,
+          body,
           url: "/notes",
-          tag: "urgent-note",
+          tag: isUrgent ? "urgent-note" : "note",
         });
       }
     }
