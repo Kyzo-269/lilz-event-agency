@@ -66,37 +66,44 @@ export async function setupPushNotifications(): Promise<boolean> {
   }
 }
 
-// ── Sauvegarde l'abonnement côté serveur ─────────────────────
+// ── Sauvegarde l'abonnement directement via le browser client ─
+// On écrit dans Supabase depuis le browser — plus simple, RLS fonctionne
+// nativement via la session active, aucun cookie serveur impliqué.
 async function saveSubscription(sub: PushSubscription): Promise<void> {
   try {
-    // Récupérer le JWT depuis la session active (ne dépend pas des cookies serveur)
     const supabase = createClient();
-    const { data: { session }, error: sessionErr } = await supabase.auth.getSession();
 
-    if (sessionErr || !session?.access_token) {
-      console.error("[push] Pas de session active — impossible de sauvegarder l'abonnement", sessionErr?.message);
+    // Vérifier qu'on a bien une session active
+    const { data: { user }, error: userErr } = await supabase.auth.getUser();
+    if (userErr || !user) {
+      console.error("[push] Pas de session active :", userErr?.message);
       return;
     }
 
-    console.log("[push] JWT récupéré, envoi vers /api/push/subscribe…");
+    console.log("[push] Session active :", user.id, "— upsert push_subscriptions…");
 
-    const res = await fetch("/api/push/subscribe", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.access_token}`,
-      },
-      body: JSON.stringify({
-        subscription: sub.toJSON(),
-        userAgent: navigator.userAgent,
-      }),
-    });
+    const subJson = sub.toJSON() as {
+      endpoint: string;
+      keys?: { p256dh?: string; auth?: string };
+    };
 
-    const json = await res.json();
-    if (!res.ok) {
-      console.error("[push] Erreur sauvegarde abonnement :", res.status, json);
+    if (!subJson.endpoint || !subJson.keys?.p256dh || !subJson.keys?.auth) {
+      console.error("[push] PushSubscription.toJSON() incomplet :", JSON.stringify(subJson));
+      return;
+    }
+
+    const { error } = await supabase.from("push_subscriptions").upsert({
+      user_id:    user.id,
+      endpoint:   subJson.endpoint,
+      p256dh:     subJson.keys.p256dh,
+      auth:       subJson.keys.auth,
+      user_agent: navigator.userAgent,
+    }, { onConflict: "user_id,endpoint" });
+
+    if (error) {
+      console.error("[push] Erreur upsert Supabase :", error.message, error.code, error.details);
     } else {
-      console.log("[push] ✓ Abonnement sauvegardé en base");
+      console.log("[push] ✓ Abonnement sauvegardé en base pour", user.id);
     }
   } catch (err) {
     console.error("[push] Impossible de sauvegarder l'abonnement :", err);

@@ -10,21 +10,47 @@ CREATE TABLE IF NOT EXISTS push_subscriptions (
   endpoint   text NOT NULL,
   p256dh     text NOT NULL,
   auth       text NOT NULL,
-  user_agent text,              -- pour identifier l'appareil (optionnel)
+  user_agent text,
   created_at timestamptz DEFAULT now(),
-  UNIQUE (user_id, endpoint)    -- un seul enregistrement par abonnement
+  UNIQUE (user_id, endpoint)
 );
 
--- RLS
+-- RLS activé
 ALTER TABLE push_subscriptions ENABLE ROW LEVEL SECURITY;
 
--- Chaque membre peut gérer ses propres abonnements
-DROP POLICY IF EXISTS "push_own" ON push_subscriptions;
-CREATE POLICY "push_own" ON push_subscriptions
-  FOR ALL USING (auth.uid() = user_id);
+-- Supprimer toutes les anciennes policies (clean slate)
+DROP POLICY IF EXISTS "push_own"        ON push_subscriptions;
+DROP POLICY IF EXISTS "push_read_auth"  ON push_subscriptions;
+DROP POLICY IF EXISTS "push_select"     ON push_subscriptions;
+DROP POLICY IF EXISTS "push_insert"     ON push_subscriptions;
+DROP POLICY IF EXISTS "push_update"     ON push_subscriptions;
+DROP POLICY IF EXISTS "push_delete"     ON push_subscriptions;
 
--- Les membres authentifiés peuvent LIRE les abonnements des autres
--- (nécessaire pour envoyer des notifications côté client)
-DROP POLICY IF EXISTS "push_read_auth" ON push_subscriptions;
-CREATE POLICY "push_read_auth" ON push_subscriptions
-  FOR SELECT USING (auth.role() = 'authenticated');
+-- SELECT : tout membre authentifié peut lire tous les abonnements
+--          (nécessaire pour envoyer des notifs aux autres membres)
+CREATE POLICY "push_select" ON push_subscriptions
+  FOR SELECT
+  USING (auth.role() = 'authenticated');
+
+-- INSERT : chaque membre peut créer SES propres abonnements
+--          WITH CHECK obligatoire pour les INSERT sous Supabase
+CREATE POLICY "push_insert" ON push_subscriptions
+  FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- UPDATE : chaque membre peut modifier SES propres abonnements
+CREATE POLICY "push_update" ON push_subscriptions
+  FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- DELETE : chaque membre peut supprimer SES propres abonnements
+CREATE POLICY "push_delete" ON push_subscriptions
+  FOR DELETE
+  USING (auth.uid() = user_id);
+
+-- Vérification : affiche les policies actives
+SELECT policyname, cmd, qual, with_check
+FROM pg_policies
+WHERE tablename = 'push_subscriptions'
+ORDER BY cmd;
