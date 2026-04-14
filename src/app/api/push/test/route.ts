@@ -1,11 +1,19 @@
 import webpush from "web-push";
-import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
+
+function makeClient(token: string) {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { global: { headers: { Authorization: `Bearer ${token}` } } }
+  );
+}
 
 // ── GET /api/push/test ────────────────────────────────────────
 // Ouvrir cette URL dans un navigateur pour diagnostiquer
 // et envoyer une notification de test à tous les abonnés.
-export async function GET() {
+export async function GET(req: NextRequest) {
   const subject    = process.env.VAPID_SUBJECT;
   const publicKey  = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
   const privateKey = process.env.VAPID_PRIVATE_KEY;
@@ -24,16 +32,26 @@ export async function GET() {
     return NextResponse.json({ ok: false, error: "VAPID non configuré", diag }, { status: 503 });
   }
 
-  // Auth
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  diag.auth = user ? `✓ connecté (${user.email})` : "✗ non authentifié — ouvre cette URL après connexion";
+  // Auth via JWT (header ou query param pour faciliter les tests depuis le navigateur)
+  const authHeader = req.headers.get("authorization") ?? "";
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7)
+    : req.nextUrl.searchParams.get("token") ?? "";
 
-  if (!user) {
-    return NextResponse.json({ ok: false, error: "Non authentifié", diag }, { status: 401 });
+  if (!token) {
+    diag.auth = "✗ non authentifié — ajoute ?token=TON_JWT dans l'URL ou utilise Authorization: Bearer";
+    return NextResponse.json({ ok: false, error: "Token manquant", diag, hint: "Récupère ton JWT dans DevTools > Application > Local Storage > supabase.auth.token" }, { status: 401 });
   }
 
-  // Lire les abonnements
+  const supabase = makeClient(token);
+  const { data: { user } } = await supabase.auth.getUser();
+  diag.auth = user ? `✓ connecté (${user.email})` : "✗ token invalide";
+
+  if (!user) {
+    return NextResponse.json({ ok: false, error: "Token invalide", diag }, { status: 401 });
+  }
+
+  // Lire tous les abonnements (le service role est nécessaire ici pour lire tous les users)
+  // On lit sans filtre — la RLS "push_read_auth" autorise les membres authentifiés
   const { data: subs, error: fetchErr } = await supabase
     .from("push_subscriptions")
     .select("endpoint, p256dh, auth, user_id, user_agent");

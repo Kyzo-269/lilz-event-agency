@@ -1,5 +1,7 @@
 "use client";
 
+import { createClient } from "@/lib/supabase/client";
+
 // ── Helper : convertit la clé VAPID base64 en Uint8Array ─────
 function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -67,17 +69,32 @@ export async function setupPushNotifications(): Promise<boolean> {
 // ── Sauvegarde l'abonnement côté serveur ─────────────────────
 async function saveSubscription(sub: PushSubscription): Promise<void> {
   try {
+    // Récupérer le JWT depuis la session active (ne dépend pas des cookies serveur)
+    const supabase = createClient();
+    const { data: { session }, error: sessionErr } = await supabase.auth.getSession();
+
+    if (sessionErr || !session?.access_token) {
+      console.error("[push] Pas de session active — impossible de sauvegarder l'abonnement", sessionErr?.message);
+      return;
+    }
+
+    console.log("[push] JWT récupéré, envoi vers /api/push/subscribe…");
+
     const res = await fetch("/api/push/subscribe", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.access_token}`,
+      },
       body: JSON.stringify({
         subscription: sub.toJSON(),
         userAgent: navigator.userAgent,
       }),
     });
+
     const json = await res.json();
     if (!res.ok) {
-      console.error("[push] Erreur sauvegarde abonnement :", json);
+      console.error("[push] Erreur sauvegarde abonnement :", res.status, json);
     } else {
       console.log("[push] ✓ Abonnement sauvegardé en base");
     }
@@ -116,9 +133,19 @@ export async function sendPushTo(params: {
   tag?: string;
 }): Promise<void> {
   try {
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+    if (!token) {
+      console.warn("[push] sendPushTo : pas de session active");
+      return;
+    }
     const res = await fetch("/api/push/send", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
       body: JSON.stringify({
         userId:        params.userId,
         toAll:         params.toAll,

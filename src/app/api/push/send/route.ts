@@ -1,6 +1,14 @@
 import webpush from "web-push";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+
+function makeClient(token: string) {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { global: { headers: { Authorization: `Bearer ${token}` } } }
+  );
+}
 
 interface PushPayload {
   title: string;
@@ -47,11 +55,17 @@ export async function POST(req: NextRequest) {
 
     console.log("[push/send] Requête reçue :", { userId, toAll, excludeUserId, title: payload?.title });
 
-    // ── Auth ──────────────────────────────────────────────────────
-    const supabase = await createClient();
+    // ── Auth via JWT header (pas de cookies) ──────────────────────
+    const authHeader = req.headers.get("authorization") ?? "";
+    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+    if (!token) {
+      console.error("[push/send] Header Authorization manquant");
+      return NextResponse.json({ error: "Authorization manquant" }, { status: 401 });
+    }
+    const supabase = makeClient(token);
     const { data: { user }, error: authErr } = await supabase.auth.getUser();
     if (authErr || !user) {
-      console.error("[push/send] Non authentifié :", authErr?.message);
+      console.error("[push/send] Token invalide :", authErr?.message);
       return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
     }
 
