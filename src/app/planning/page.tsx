@@ -91,7 +91,14 @@ function groupByDate(entries: PlanningEntry[]): Record<string, PlanningEntry[]> 
   }, {} as Record<string, PlanningEntry[]>);
 }
 
-// Retourne les 7 dates ISO de la semaine (lun→dim) à partir d'un offset de semaines
+// Retourne les 7 dates ISO locales de la semaine (lun→dim)
+function toLocalISO(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 function getWeekDates(weekOffset: number): string[] {
   const now = new Date();
   const day = now.getDay(); // 0=Dim, 1=Lun, ...
@@ -102,7 +109,7 @@ function getWeekDates(weekOffset: number): string[] {
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    return d.toISOString().slice(0, 10);
+    return toLocalISO(d);
   });
 }
 
@@ -189,7 +196,7 @@ export default function PlanningPage() {
   }, [entries]);
 
   const canEdit = userRole ? CAN_EDIT.includes(userRole) : false;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = toLocalISO(new Date());
   const alertes = entries.filter(e => isAlerte(e));
   const weekDates = getWeekDates(weekOffset);
 
