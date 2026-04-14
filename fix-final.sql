@@ -234,10 +234,37 @@ DO $$ BEGIN
   CREATE POLICY "tickets_auth" ON tickets FOR ALL
     USING (auth.role() = 'authenticated');
 
-  -- finances
-  DROP POLICY IF EXISTS "finances_auth" ON finances;
-  CREATE POLICY "finances_auth" ON finances FOR ALL
-    USING (auth.role() = 'authenticated');
+  -- finances : CEO et Responsable Financier uniquement
+  DROP POLICY IF EXISTS "finances_auth"   ON finances;
+  DROP POLICY IF EXISTS "finances_select" ON finances;
+  DROP POLICY IF EXISTS "finances_write"  ON finances;
+
+  CREATE POLICY "finances_select" ON finances
+    FOR SELECT
+    USING (
+      EXISTS (
+        SELECT 1 FROM profiles
+        WHERE profiles.id = auth.uid()
+          AND profiles.role IN ('CEO', 'Responsable Financier')
+      )
+    );
+
+  CREATE POLICY "finances_write" ON finances
+    FOR ALL
+    USING (
+      EXISTS (
+        SELECT 1 FROM profiles
+        WHERE profiles.id = auth.uid()
+          AND profiles.role IN ('CEO', 'Responsable Financier')
+      )
+    )
+    WITH CHECK (
+      EXISTS (
+        SELECT 1 FROM profiles
+        WHERE profiles.id = auth.uid()
+          AND profiles.role IN ('CEO', 'Responsable Financier')
+      )
+    );
 
   -- materiel_technique
   DROP POLICY IF EXISTS "materiel_auth" ON materiel_technique;
