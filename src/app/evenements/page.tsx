@@ -57,7 +57,7 @@ const STATUT_STYLE: Record<Statut, { color: string; bg: string; border: string }
   "Terminé":        { color: "#555",    bg: "#111",    border: "#333"    },
 };
 
-const CAN_EDIT = ["CEO", "Chef de Projet Événementiel", "Event Planner"];
+const CAN_EDIT = ["CEO", "Admin", "Chef de Projet Événementiel", "Event Planner"];
 
 const PREDEFINED_TASKS = [
   "🎵 Sono / Musique", "💡 Lumières / Éclairage", "🎤 Micros / Scène",

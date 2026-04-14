@@ -22,7 +22,7 @@ interface FinanceEntry {
 }
 
 // ── Constantes ────────────────────────────────────────────────
-const ROLES_AUTORISES = ["CEO", "Responsable Financier"];
+const ROLES_AUTORISES = ["CEO", "Admin", "Responsable Financier"];
 const CATEGORIES_RECETTE = ["Billetterie", "Sponsoring", "Subvention", "Vente bar", "Vente merch", "Autre"];
 const CATEGORIES_DEPENSE = ["Logistique", "Personnel", "Matériel", "Communication", "Autre"];
 
@@ -198,7 +198,7 @@ export default function FinancesPage() {
           <p style={{ fontSize: 60, margin: "0 0 16px" }}>🔒</p>
           <h1 style={{ fontSize: 20, fontWeight: 900, color: "#fff", margin: "0 0 8px" }}>Accès refusé</h1>
           <p style={{ fontSize: 13, color: "#aaa", margin: "0 0 24px", lineHeight: 1.6 }}>
-            Le module Finances est réservé au <span style={{ color: "#FFD700", fontWeight: 700 }}>CEO</span> et au <span style={{ color: "#009A44", fontWeight: 700 }}>Responsable Financier</span> uniquement.
+            Le module Finances est réservé au <span style={{ color: "#FFD700", fontWeight: 700 }}>CEO / Admin</span> et au <span style={{ color: "#009A44", fontWeight: 700 }}>Responsable Financier</span> uniquement.
           </p>
           <Link href="/dashboard" style={{ display: "inline-block", padding: "10px 24px", backgroundColor: "#E4002B", color: "#fff", borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
             ← Retour au dashboard

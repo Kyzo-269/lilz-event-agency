@@ -5,10 +5,12 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useTheme } from "@/lib/ThemeProvider";
 import BottomNav from "@/components/ui/BottomNav";
+import { isPushSupported, setupPushNotifications } from "@/hooks/usePushNotifications";
 
 // ── Couleurs par rôle ──────────────────────────────────────────
 const ROLE_STYLE: Record<string, { color: string; bg: string; border: string }> = {
   "CEO":                         { color: "#FFD700", bg: "#1a1400",  border: "#665800" },
+  "Admin":                       { color: "#FFD700", bg: "#1a1400",  border: "#665800" },
   "Responsable Financier":       { color: "#009A44", bg: "#001a0d",  border: "#005c28" },
   "Chef de Projet Événementiel": { color: "#1E90FF", bg: "#001428",  border: "#0a4a8a" },
   "Community Manager":           { color: "#ff69b4", bg: "#1a0012",  border: "#7a0060" },
@@ -23,6 +25,7 @@ const ROLE_STYLE: Record<string, { color: string; bg: string; border: string }> 
 
 const ROLE_STYLE_LIGHT: Record<string, { color: string; bg: string; border: string }> = {
   "CEO":                         { color: "#a07800", bg: "#fffbe6",  border: "#ffe066" },
+  "Admin":                       { color: "#a07800", bg: "#fffbe6",  border: "#ffe066" },
   "Responsable Financier":       { color: "#007a35", bg: "#e6f7ed",  border: "#8ad4a5" },
   "Chef de Projet Événementiel": { color: "#1565C0", bg: "#e8f1fd",  border: "#90b8f0" },
   "Community Manager":           { color: "#c2185b", bg: "#fce4ec",  border: "#f48fb1" },
@@ -157,6 +160,10 @@ export default function DashboardPage() {
   const [hasUrgent, setHasUrgent]       = useState(false);
   const [loading, setLoading]           = useState(true);
 
+  // ── Push notifications ─────────────────────────────────────
+  type PushState = "unknown" | "granted" | "denied" | "unsupported" | "activating" | "done";
+  const [pushState, setPushState] = useState<PushState>("unknown");
+
   // ── Palette selon le thème ─────────────────────────────────
   const T = {
     pageBg:        isDark ? "#080808"  : "#ffffff",
@@ -198,6 +205,27 @@ export default function DashboardPage() {
     fetchData();
   }, [fetchData]);
 
+  // Vérifie l'état des notifications push au montage
+  useEffect(() => {
+    if (!isPushSupported()) { setPushState("unsupported"); return; }
+    if (typeof Notification === "undefined") { setPushState("unsupported"); return; }
+    if (Notification.permission === "granted") setPushState("granted");
+    else if (Notification.permission === "denied") setPushState("denied");
+    else setPushState("unknown"); // "default" → banner visible
+  }, []);
+
+  // ── Handler bouton "Activer les notifications" ─────────────
+  // IMPORTANT iOS : setupPushNotifications() doit être le PREMIER
+  // appel async dans ce handler (Notification.requestPermission()
+  // est le 1er await interne) — sans aucun await réseau avant lui.
+  async function handleActiverPush() {
+    setPushState("activating");
+    console.log("[push] Activation depuis le dashboard…");
+    const ok = await setupPushNotifications();
+    console.log("[push] Résultat activation :", ok);
+    setPushState(ok ? "done" : "denied");
+  }
+
   // ── Notifications Realtime ─────────────────────────────────
   useEffect(() => {
     const channel = supabase
@@ -216,7 +244,7 @@ export default function DashboardPage() {
     return () => { supabase.removeChannel(channel); };
   }, [supabase]);
 
-  const isFinance = profile?.role === "CEO" || profile?.role === "Responsable Financier";
+  const isFinance = profile?.role === "CEO" || profile?.role === "Admin" || profile?.role === "Responsable Financier";
   const firstName = profile?.full_name?.split(" ")[0] ?? "";
   const lastName  = profile?.full_name?.split(" ").slice(1).join(" ") ?? "";
   const roleStyleMap = isDark ? ROLE_STYLE : ROLE_STYLE_LIGHT;
@@ -317,6 +345,50 @@ export default function DashboardPage() {
           <div key={i} style={{ flex: 1, backgroundColor: c }} />
         )}
       </div>
+
+      {/* ── Bandeau activation notifications push ── */}
+      {(pushState === "unknown" || pushState === "activating" || pushState === "done" || pushState === "denied") && (
+        <div style={{
+          maxWidth: 672, margin: "0 auto", width: "100%",
+          padding: pushState === "done" ? "6px 16px" : "10px 16px",
+          transition: "padding 0.3s",
+        }}>
+          {pushState === "done" && (
+            <p style={{ fontSize: 12, color: "#009A44", textAlign: "center", margin: 0, fontWeight: 600 }}>
+              Notifications activées
+            </p>
+          )}
+          {pushState === "denied" && (
+            <p style={{ fontSize: 12, color: "#888", textAlign: "center", margin: 0 }}>
+              Notifications refusées — active-les dans Réglages iOS
+            </p>
+          )}
+          {(pushState === "unknown" || pushState === "activating") && (
+            <button
+              onClick={handleActiverPush}
+              disabled={pushState === "activating"}
+              style={{
+                width: "100%", padding: "11px 16px", borderRadius: 12,
+                backgroundColor: isDark ? "#001a0d" : "rgba(0,154,68,0.06)",
+                border: "1.5px solid #009A44",
+                color: "#009A44", fontSize: 13, fontWeight: 700,
+                cursor: pushState === "activating" ? "default" : "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              }}>
+              {pushState === "activating" ? (
+                "Activation en cours…"
+              ) : (
+                <>
+                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 17H9a6 6 0 01-6-6V9a9 9 0 0118 0v2a6 6 0 01-6 6zm0 0v1a3 3 0 11-6 0v-1"/>
+                  </svg>
+                  Activer les notifications push
+                </>
+              )}
+            </button>
+          )}
+        </div>
+      )}
 
       <main style={{
         flex: 1,

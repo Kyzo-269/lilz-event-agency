@@ -32,12 +32,13 @@ type View = "liste" | "calendrier";
 
 // ── Constantes ────────────────────────────────────────────────
 const POSTES = ["Entrée", "Bar", "Scène", "Vestiaire", "Parking", "Coulisses", "Sécurité", "Accueil VIP", "Technique Son", "Technique Lumière", "Coordination", "Autre"];
-const CAN_EDIT = ["CEO", "Chef de Projet Événementiel", "Site Manager"];
+const CAN_EDIT = ["CEO", "Admin", "Chef de Projet Événementiel", "Site Manager"];
 const DAYS_FR = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
 // Couleurs par rôle
 const ROLE_COLOR: Record<string, string> = {
   "CEO":                         "#FFD700",
+  "Admin":                       "#FFD700",
   "Responsable Financier":       "#009A44",
   "Chef de Projet Événementiel": "#1E90FF",
   "Community Manager":           "#ff69b4",

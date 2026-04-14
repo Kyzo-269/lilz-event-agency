@@ -4,6 +4,7 @@
 
 export type Role =
   | "CEO"
+  | "Admin"
   | "Chef de Projet Événementiel"
   | "Community Manager"
   | "Site Manager"

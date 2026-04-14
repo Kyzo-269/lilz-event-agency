@@ -66,6 +66,7 @@ const CAT_COLOR: Record<Categorie, string> = {
 
 const ROLES_AUTORISES = [
   "CEO",
+  "Admin",
   "Régisseur de production 1",
   "Régisseur de production 2",
   "Régisseur de production 3",
@@ -652,7 +653,7 @@ export default function MaterielPage() {
         {!loading && !canEdit && (
           <div style={{ backgroundColor: isDark ? "#110d00" : "#fffbef", border: `1px solid ${isDark ? "#665800" : "#FFD700"}`, borderRadius: 12, padding: "10px 14px", fontSize: 12, color: isDark ? "#FFD700" : "#a07800", display: "flex", gap: 8, alignItems: "center" }}>
             <span>👁️</span>
-            <span>Mode lecture — seuls les Régisseurs et le CEO peuvent modifier.</span>
+            <span>Mode lecture — seuls les Régisseurs, le CEO et l&apos;Admin peuvent modifier.</span>
           </div>
         )}
 

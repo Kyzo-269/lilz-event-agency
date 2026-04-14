@@ -23,6 +23,7 @@ interface Member {
 // ── Config couleurs rôle ──────────────────────────────────────
 const ROLE_STYLE: Record<string, { color: string; bg: string; border: string }> = {
   "CEO":                         { color: "#FFD700", bg: "#1a1400",  border: "#665800"  },
+  "Admin":                       { color: "#FFD700", bg: "#1a1400",  border: "#665800"  },
   "Responsable Financier":       { color: "#009A44", bg: "#001a0d",  border: "#005c28"  },
   "Chef de Projet Événementiel": { color: "#1E90FF", bg: "#001428",  border: "#0a4a8a"  },
   "Community Manager":           { color: "#ff69b4", bg: "#1a0012",  border: "#7a0060"  },

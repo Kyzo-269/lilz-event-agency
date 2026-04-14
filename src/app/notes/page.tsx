@@ -65,7 +65,7 @@ function initials(name: string) {
 }
 
 function roleColor(role: string): string {
-  if (role === "CEO") return "#FFD700";
+  if (role === "CEO" || role === "Admin") return "#FFD700";
   if (role.includes("Régisseur")) return "#E4002B";
   if (role === "Responsable Financier") return "#009A44";
   if (role === "Chef de Projet Événementiel") return "#1E90FF";
