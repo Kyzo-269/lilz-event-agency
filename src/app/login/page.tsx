@@ -5,6 +5,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@/lib/ThemeProvider";
+import { setupPushNotifications } from "@/hooks/usePushNotifications";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,6 +32,10 @@ export default function LoginPage() {
       setLoading(false);
       return;
     }
+
+    // Demander la permission de notifications push après connexion
+    // (iOS 16.4+ PWA seulement — silencieux si non supporté)
+    setupPushNotifications().catch(() => {});
 
     router.push("/dashboard");
     router.refresh();

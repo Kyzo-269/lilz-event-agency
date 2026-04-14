@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import BottomNav from "@/components/ui/BottomNav";
 import { useTheme } from "@/lib/ThemeProvider";
+import { sendPushTo } from "@/hooks/usePushNotifications";
 
 // ── Types ─────────────────────────────────────────────────────
 interface NoteReaction {
@@ -182,6 +183,19 @@ export default function NotesPage() {
       setContent(""); setIsUrgent(false); setShowMentions(false);
       setReplyTarget(null); setAudioBlob(null); setPhotoFile(null); setPhotoPreview(null);
       await fetchAll();
+
+      // Notification push pour les notes URGENTES → tous les membres sauf l'expéditeur
+      if (isUrgent) {
+        const preview = content.trim().slice(0, 80) || (audioBlob ? "Message vocal" : "Photo");
+        sendPushTo({
+          toAll: true,
+          excludeUserId: user.id,
+          title: `🚨 URGENT — ${userName}`,
+          body: preview.length < content.trim().length ? preview + "…" : preview,
+          url: "/notes",
+          tag: "urgent-note",
+        });
+      }
     }
     setSubmitting(false);
   }

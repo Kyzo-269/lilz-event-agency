@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useTheme } from "@/lib/ThemeProvider";
+import { sendPushTo } from "@/hooks/usePushNotifications";
 
 // ── Types ─────────────────────────────────────────────────────
 interface DirectMessage {
@@ -207,6 +208,15 @@ export default function ConversationPage() {
     if (data) setMsgs(prev => prev.map(m => m.id === optimistic.id ? (data as DirectMessage) : m));
     setSending(false);
     inputRef.current?.focus();
+
+    // Notification push au destinataire
+    sendPushTo({
+      userId: otherId,
+      title: `💬 ${me.full_name}`,
+      body: text.length > 80 ? text.slice(0, 80) + "…" : text,
+      url: `/messages/${me.id}`,
+      tag: `msg-${me.id}`,
+    });
   }
 
   // ── Envoi média (photo ou audio) ─────────────────────────
@@ -240,6 +250,15 @@ export default function ConversationPage() {
     });
     if (dbErr) console.error("Erreur insert message :", dbErr.message);
     setUploadingMedia(false);
+
+    // Notification push au destinataire
+    sendPushTo({
+      userId: otherId,
+      title: `${isImg ? "📷" : "🎙️"} ${me?.full_name ?? ""}`,
+      body:  isImg ? "vous a envoyé une photo" : "vous a envoyé un message vocal",
+      url:   `/messages/${me?.id}`,
+      tag:   `msg-${me?.id}`,
+    });
   }
 
   // ── Enregistrement vocal ──────────────────────────────────
