@@ -147,12 +147,23 @@ export default function NotesPage() {
 
     // Upload audio si présent
     if (audioBlob) {
-      const fileName = `${user.id}/audio_${Date.now()}.webm`;
-      const { error: upErr } = await supabase.storage.from("chat-media").upload(fileName, audioBlob, { contentType: "audio/webm" });
-      if (!upErr) {
-        const { data: { publicUrl } } = supabase.storage.from("chat-media").getPublicUrl(fileName);
-        finalAudioUrl = publicUrl;
+      // Détecter le vrai MIME type (audio/mp4 sur iOS, audio/webm ailleurs)
+      const mime = audioBlob.type || "audio/mp4";
+      const ext  = mime.includes("mp4") || mime.includes("m4a") ? "mp4"
+                 : mime.includes("ogg") ? "ogg"
+                 : "webm";
+      const fileName = `${user.id}/audio_${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("chat-media")
+        .upload(fileName, audioBlob, { contentType: mime });
+      if (upErr) {
+        console.error("[notes] Erreur upload audio :", upErr.message);
+        alert(`Erreur envoi vocal : ${upErr.message}`);
+        setSubmitting(false);
+        return;
       }
+      const { data: { publicUrl } } = supabase.storage.from("chat-media").getPublicUrl(fileName);
+      finalAudioUrl = publicUrl;
     }
 
     // Upload photo si présente
@@ -248,12 +259,20 @@ export default function NotesPage() {
   async function startRecording() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mr = new MediaRecorder(stream);
+      // iOS ne supporte pas audio/webm — détection automatique du format
+      const mimeType = MediaRecorder.isTypeSupported("audio/webm")
+        ? "audio/webm"
+        : MediaRecorder.isTypeSupported("audio/mp4")
+          ? "audio/mp4"
+          : "";
+      const mr = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
       mediaRecorderRef.current = mr;
       audioChunksRef.current = [];
       mr.ondataavailable = e => { if (e.data.size > 0) audioChunksRef.current.push(e.data); };
       mr.onstop = () => {
-        const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        // Utilise le vrai MIME type du recorder, pas un type hardcodé
+        const actualType = mr.mimeType || mimeType || "audio/mp4";
+        const blob = new Blob(audioChunksRef.current, { type: actualType });
         setAudioBlob(blob);
         stream.getTracks().forEach(t => t.stop());
         if (recordTimerRef.current) clearInterval(recordTimerRef.current);
