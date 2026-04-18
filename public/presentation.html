@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LIL'Z EVENT AGENCY — Présentation Application</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:  #009A44;
+      --blue:   #1E90FF;
+      --red:    #E4002B;
+      --gold:   #FFD700;
+      --bg:     #0a0a0a;
+      --card:   #111111;
+      --border: #1f3d25;
+      --text:   #ffffff;
+      --sub:    #888888;
+      --muted:  #444444;
+    }
+
+    html { font-size: 10pt; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ── Page layout ──────────────────────────────── */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 0;
+      page-break-after: always;
+      break-after: page;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .page:last-child { page-break-after: avoid; break-after: avoid; }
+
+    /* ── Stripe décorative ────────────────────────── */
+    .stripe {
+      display: flex;
+      height: 4px;
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .stripe span { flex: 1; }
+
+    /* ── Cover page ───────────────────────────────── */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 297mm;
+      padding: 48px 40px;
+      background: var(--bg);
+      position: relative;
+    }
+
+    .cover-glow {
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(0,154,68,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cover-glow-bottom {
+      position: absolute;
+      bottom: -100px;
+      right: -80px;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(30,144,255,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cover-logo-wrap {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 2px solid rgba(0,154,68,0.5);
+      box-shadow: 0 0 60px rgba(0,154,68,0.3), 0 16px 48px rgba(0,0,0,0.8);
+      margin-bottom: 28px;
+    }
+
+    .cover-logo-wrap img {
+      display: block;
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+    }
+
+    .cover-agency {
+      font-size: 28pt;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #fff;
+      text-align: center;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .cover-subtitle {
+      font-size: 8pt;
+      color: var(--green);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .cover-stripe {
+      display: flex;
+      width: 260px;
+      height: 3px;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    .cover-doc-title {
+      font-size: 15pt;
+      font-weight: 800;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .cover-doc-sub {
+      font-size: 9pt;
+      color: var(--sub);
+      text-align: center;
+      line-height: 1.6;
+      max-width: 380px;
+      margin-bottom: 48px;
+    }
+
+    .cover-tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 56px;
+    }
+
+    .cover-tag {
+      font-size: 7.5pt;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 999px;
+      letter-spacing: 0.06em;
+    }
+
+    .cover-footer {
+      position: absolute;
+      bottom: 32px;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+    .cover-footer p {
+      font-size: 8pt;
+      color: var(--muted);
+    }
+
+    .cover-footer .dev {
+      font-size: 8pt;
+      color: var(--sub);
+      margin-top: 4px;
+    }
+
+    .cover-footer .dev span {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* ── Module pages ─────────────────────────────── */
+    .mod-page {
+      padding: 28px 32px 28px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Page header ──────────────────────────────── */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-header-logo img {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+
+    .page-header-agency {
+      font-size: 8pt;
+      font-weight: 800;
+      color: var(--sub);
+      letter-spacing: 0.04em;
+    }
+
+    .page-header-page {
+      font-size: 7.5pt;
+      color: var(--muted);
+    }
+
+    /* ── Module hero ──────────────────────────────── */
+    .mod-hero {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+      padding: 18px 20px;
+      border-radius: 14px;
+      border: 1px solid;
+    }
+
+    .mod-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 22pt;
+    }
+
+    .mod-hero-title {
+      font-size: 15pt;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .mod-hero-desc {
+      font-size: 8.5pt;
+      color: var(--sub);
+      line-height: 1.5;
+      max-width: 500px;
+    }
+
+    .mod-hero-badge {
+      font-size: 7pt;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* ── Feature sections ─────────────────────────── */
+    .sections-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .sections-grid.single { grid-template-columns: 1fr; }
+    .sections-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+
+    .feat-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .feat-section-title {
+      font-size: 7.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feat-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .feat-list li {
+      font-size: 7.5pt;
+      color: #cccccc;
+      line-height: 1.45;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .feat-list li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      font-size: 7pt;
+      font-weight: 700;
+    }
+
+    .feat-list li strong {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* ── Role badges ──────────────────────────────── */
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 6.5pt;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin: 1px;
+    }
+
+    .roles-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    /* ── KPI strip ────────────────────────────────── */
+    .kpi-strip {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .kpi-card {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .kpi-card .kpi-val {
+      font-size: 16pt;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .kpi-card .kpi-lbl {
+      font-size: 6.5pt;
+      color: var(--sub);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+
+    /* ── TOC (table of contents) ──────────────────── */
+    .toc-page {
+      padding: 40px 40px 32px;
+    }
+
+    .toc-title {
+      font-size: 16pt;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .toc-sub {
+      font-size: 9pt;
+      color: var(--sub);
+      margin-bottom: 32px;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .toc-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .toc-item-icon {
+      font-size: 20pt;
+      flex-shrink: 0;
+    }
+
+    .toc-item-name {
+      font-size: 10pt;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .toc-item-count {
+      font-size: 7.5pt;
+      color: var(--sub);
+      margin-top: 2px;
+    }
+
+    /* ── Footer stripe ────────────────────────────── */
+    .page-bottom-stripe {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      display: flex;
+    }
+    .page-bottom-stripe span { flex: 1; }
+
+    /* ── Highlight box ────────────────────────────── */
+    .highlight-box {
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-size: 8pt;
+      line-height: 1.5;
+    }
+
+    /* ── Print ────────────────────────────────────── */
+    @media print {
+      body { background: #0a0a0a; }
+      .page { margin: 0; width: 100%; page-break-after: always; break-after: page; }
+      .page:last-child { page-break-after: avoid; break-after: avoid; }
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════
+     PAGE 1 — COUVERTURE
+═════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-glow"></div>
+    <div class="cover-glow-bottom"></div>
+
+    <div class="cover-logo-wrap">
+      <img src="/logo.jpg" alt="LIL'Z EVENT AGENCY" />
+    </div>
+
+    <div class="cover-agency">LIL'Z EVENT AGENCY</div>
+    <div class="cover-subtitle">Espace équipe · Application interne</div>
+
+    <div class="cover-stripe">
+      <span style="background:#009A44"></span>
+      <span style="background:rgba(255,255,255,0.5)"></span>
+      <span style="background:#E4002B"></span>
+      <span style="background:#1E90FF"></span>
+      <span style="background:#FFD700"></span>
+    </div>
+
+    <div class="cover-doc-title">Présentation complète de l'application</div>
+    <div class="cover-doc-sub">
+      Documentation exhaustive de toutes les fonctionnalités disponibles
+      pour l'équipe LIL'Z EVENT AGENCY. Chaque module est détaillé avec
+      ses capacités, ses accès par rôle et ses interactions.
+    </div>
+
+    <div class="cover-tags">
+      <span class="cover-tag" style="background:rgba(0,154,68,0.15);color:#009A44;border:1px solid rgba(0,154,68,0.4)">📱 PWA Mobile</span>
+      <span class="cover-tag" style="background:rgba(30,144,255,0.12);color:#1E90FF;border:1px solid rgba(30,144,255,0.35)">☁️ Temps réel</span>
+      <span class="cover-tag" style="background:rgba(255,215,0,0.12);color:#FFD700;border:1px solid rgba(255,215,0,0.35)">🔔 Notifications push</span>
+      <span class="cover-tag" style="background:rgba(228,0,43,0.12);color:#E4002B;border:1px solid rgba(228,0,43,0.35)">🔒 Accès par rôle</span>
+      <span class="cover-tag" style="background:rgba(255,255,255,0.06);color:#888;border:1px solid #333">🌙 Mode sombre</span>
+      <span class="cover-tag" style="background:rgba(255,255,255,0.06);color:#888;border:1px solid #333">📴 Mode hors-ligne</span>
+    </div>
+
+    <!-- Stat strip -->
+    <div style="display:flex;gap:24px;margin-bottom:0">
+      <div style="text-align:center">
+        <div style="font-size:22pt;font-weight:900;color:#009A44;line-height:1">9</div>
+        <div style="font-size:7pt;color:#666;text-transform:uppercase;letter-spacing:0.1em;margin-top:3px">Modules</div>
+      </div>
+      <div style="width:1px;background:#1f3d25"></div>
+      <div style="text-align:center">
+        <div style="font-size:22pt;font-weight:900;color:#1E90FF;line-height:1">11</div>
+        <div style="font-size:7pt;color:#666;text-transform:uppercase;letter-spacing:0.1em;margin-top:3px">Rôles</div>
+      </div>
+      <div style="width:1px;background:#1f3d25"></div>
+      <div style="text-align:center">
+        <div style="font-size:22pt;font-weight:900;color:#FFD700;line-height:1">60+</div>
+        <div style="font-size:7pt;color:#666;text-transform:uppercase;letter-spacing:0.1em;margin-top:3px">Fonctionnalités</div>
+      </div>
+      <div style="width:1px;background:#1f3d25"></div>
+      <div style="text-align:center">
+        <div style="font-size:22pt;font-weight:900;color:#E4002B;line-height:1">iOS</div>
+        <div style="font-size:7pt;color:#666;text-transform:uppercase;letter-spacing:0.1em;margin-top:3px">Compatible</div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <p style="font-style:italic;color:#444">Chaque instant marque l'histoire</p>
+      <p class="dev" style="margin-top:6px">Développée par <span>Kylian Cheikh Ahmed</span></p>
+    </div>
+  </div>
+  <div class="stripe" style="position:absolute;bottom:0;left:0;right:0;height:4px">
+    <span style="background:#009A44"></span>
+    <span style="background:rgba(255,255,255,0.4)"></span>
+    <span style="background:#E4002B"></span>
+    <span style="background:#1E90FF"></span>
+    <span style="background:#FFD700"></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     PAGE 2 — SOMMAIRE
+═════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe">
+    <span style="background:#009A44"></span>
+    <span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span>
+    <span style="background:#1E90FF"></span>
+    <span style="background:#FFD700"></span>
+  </div>
+
+  <div style="padding:32px 36px 28px">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid #1f3d25">
+      <div style="display:flex;align-items:center;gap:10px">
+        <img src="/logo.jpg" style="width:26px;height:26px;border-radius:7px;object-fit:cover;border:1px solid #1f3d25" />
+        <span style="font-size:8pt;font-weight:800;color:#666;letter-spacing:0.04em">LIL'Z EVENT AGENCY</span>
+      </div>
+      <span style="font-size:7.5pt;color:#444">Sommaire</span>
+    </div>
+
+    <div style="margin-bottom:6px;font-size:18pt;font-weight:900">Sommaire</div>
+    <div style="font-size:9pt;color:#666;margin-bottom:28px">Tous les modules de l'application et leurs fonctionnalités</div>
+
+    <div class="toc-grid">
+
+      <div class="toc-item">
+        <div class="toc-item-icon">🏠</div>
+        <div>
+          <div class="toc-item-name">Dashboard</div>
+          <div class="toc-item-count">Navigation · Profil · Notifications push</div>
+        </div>
+      </div>
+
+      <div class="toc-item">
+        <div class="toc-item-icon">👥</div>
+        <div>
+          <div class="toc-item-name">Équipe</div>
+          <div class="toc-item-count">Présence en temps réel · Statuts · Messagerie</div>
+        </div>
+      </div>
+
+      <div class="toc-item">
+        <div class="toc-item-icon">🎪</div>
+        <div>
+          <div class="toc-item-name">Événements</div>
+          <div class="toc-item-count">CRUD · Checklist · Photos · Rapports · PDF</div>
+        </div>
+      </div>
+
+      <div class="toc-item">
+        <div class="toc-item-icon">📅</div>
+        <div>
+          <div class="toc-item-name">Planning</div>
+          <div class="toc-item-count">Vue liste · Calendrier semaine · Alertes</div>
+        </div>
+      </div>
+
+      <div class="toc-item">
+        <div class="toc-item-icon">💬</div>
+        <div>
+          <div class="toc-item-name">Notes internes</div>
+          <div class="toc-item-count">Messagerie groupe · Vocaux · Photos · Réactions</div>
+        </div>
+      </div>
+
+      <div class="toc-item">
+        <div class="toc-item-icon">✉️</div>
+        <div>
+          <div class="toc-item-name">Messages privés</div>
+          <div class="toc-item-count">Chat 1:1 · Médias · Temps réel · Push</div>
+        </div>
+      </div>
+
+      <div class="toc-item">
+        <div class="toc-item-icon">🎟️</div>
+        <div>
+          <div class="toc-item-name">Billetterie</div>
+          <div class="toc-item-count">Réservations · Statuts · Compteurs</div>
+        </div>
+      </div>
+
+      <div class="toc-item">
+        <div class="toc-item-icon">🔧</div>
+        <div>
+          <div class="toc-item-name">Matériel technique</div>
+          <div class="toc-item-count">Inventaire · Besoins · États · Priorités</div>
+        </div>
+      </div>
+
+      <div class="toc-item" style="grid-column:1/-1">
+        <div class="toc-item-icon">💰</div>
+        <div>
+          <div class="toc-item-name">Finances</div>
+          <div class="toc-item-count">Recettes · Dépenses · Budget prévisionnel · Graphique mensuel · Accès restreint CEO / Admin / Responsable Financier</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Rôles -->
+    <div style="margin-top:24px;background:#111;border:1px solid #1f3d25;border-radius:12px;padding:16px 18px">
+      <div style="font-size:8pt;font-weight:800;color:#009A44;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px">Rôles de l'équipe</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px">
+        <span class="role-badge" style="background:rgba(255,215,0,0.12);color:#FFD700;border:1px solid rgba(255,215,0,0.3)">⭐ CEO</span>
+        <span class="role-badge" style="background:rgba(255,215,0,0.12);color:#FFD700;border:1px solid rgba(255,215,0,0.3)">⭐ Admin</span>
+        <span class="role-badge" style="background:rgba(30,144,255,0.12);color:#1E90FF;border:1px solid rgba(30,144,255,0.3)">📋 Chef de Projet Événementiel</span>
+        <span class="role-badge" style="background:rgba(255,105,180,0.12);color:#ff69b4;border:1px solid rgba(255,105,180,0.3)">📱 Community Manager</span>
+        <span class="role-badge" style="background:rgba(255,154,60,0.12);color:#ff9a3c;border:1px solid rgba(255,154,60,0.3)">🏗️ Site Manager</span>
+        <span class="role-badge" style="background:rgba(180,122,255,0.12);color:#b47aff;border:1px solid rgba(180,122,255,0.3)">🎯 Advisor</span>
+        <span class="role-badge" style="background:rgba(0,154,68,0.12);color:#009A44;border:1px solid rgba(0,154,68,0.3)">💶 Responsable Financier</span>
+        <span class="role-badge" style="background:rgba(34,211,238,0.12);color:#22d3ee;border:1px solid rgba(34,211,238,0.3)">🎉 Event Planner</span>
+        <span class="role-badge" style="background:rgba(255,107,107,0.12);color:#ff6b6b;border:1px solid rgba(255,107,107,0.3)">🎛️ Régisseur de production 1</span>
+        <span class="role-badge" style="background:rgba(255,107,107,0.12);color:#ff6b6b;border:1px solid rgba(255,107,107,0.3)">🎛️ Régisseur de production 2</span>
+        <span class="role-badge" style="background:rgba(255,107,107,0.12);color:#ff6b6b;border:1px solid rgba(255,107,107,0.3)">🎛️ Régisseur de production 3</span>
+        <span class="role-badge" style="background:rgba(255,107,107,0.12);color:#ff6b6b;border:1px solid rgba(255,107,107,0.3)">🎛️ Régisseur de production 4</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="stripe" style="position:absolute;bottom:0;left:0;right:0;height:3px">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     PAGE 3 — DASHBOARD + ÉQUIPE
+═════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+  <div class="mod-page">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-logo"><img src="/logo.jpg" /></div>
+        <span class="page-header-agency">LIL'Z EVENT AGENCY</span>
+      </div>
+      <span class="page-header-page">3 / 9</span>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="mod-hero" style="background:rgba(0,154,68,0.06);border-color:rgba(0,154,68,0.3)">
+      <div class="mod-icon-wrap" style="background:rgba(0,154,68,0.12)">🏠</div>
+      <div>
+        <div class="mod-hero-title" style="color:#009A44">Dashboard</div>
+        <div class="mod-hero-desc">Point d'entrée de l'application. Affiche le profil connecté, donne accès à tous les modules et gère les notifications push.</div>
+      </div>
+    </div>
+
+    <div class="sections-grid" style="margin-bottom:20px">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#009A44">🧭 Navigation & Profil</div>
+        <ul class="feat-list">
+          <li>Grille des <strong>9 modules</strong> avec icônes et descriptions</li>
+          <li>Affichage du <strong>nom, rôle et badge coloré</strong> de l'utilisateur connecté</li>
+          <li>Module Finances <strong>masqué</strong> pour les rôles non autorisés</li>
+          <li>Mise à jour du <strong>last_seen</strong> à chaque ouverture</li>
+          <li>Bouton de <strong>déconnexion</strong></li>
+        </ul>
+      </div>
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#1E90FF">🔔 Notifications & Thème</div>
+        <ul class="feat-list">
+          <li>Bannière <strong>activation notifications push</strong> (iOS-safe)</li>
+          <li>Détection automatique si les push sont supportées</li>
+          <li>Thème <strong>clair / sombre</strong> adaptatif (persisté)</li>
+          <li>Design <strong>PWA</strong> : installable sur l'écran d'accueil iPhone</li>
+          <li>Mode <strong>hors-ligne</strong> avec pages en cache</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ÉQUIPE -->
+    <div class="mod-hero" style="background:rgba(30,144,255,0.06);border-color:rgba(30,144,255,0.3)">
+      <div class="mod-icon-wrap" style="background:rgba(30,144,255,0.12)">👥</div>
+      <div>
+        <div class="mod-hero-title" style="color:#1E90FF">Équipe</div>
+        <div class="mod-hero-desc">Visualise l'ensemble de l'équipe en temps réel. Chaque membre peut mettre à jour son statut de présence, visible instantanément par tous.</div>
+      </div>
+    </div>
+
+    <div class="sections-grid">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#1E90FF">👤 Membres & Présence</div>
+        <ul class="feat-list">
+          <li>Liste triée par <strong>rôle puis nom</strong></li>
+          <li>Badge coloré par rôle (or CEO, rouge Régisseurs, etc.)</li>
+          <li>Indicateur de présence en <strong>temps réel</strong> (dot coloré)</li>
+          <li>Statuts : Disponible · Sur scène · En pause · En déplacement · Hors ligne</li>
+          <li><strong>last_seen</strong> relatif ("il y a 5 min", "Hier…")</li>
+          <li>Rafraîchissement auto toutes les <strong>30 secondes</strong></li>
+        </ul>
+      </div>
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#009A44">⚡ Temps réel & Actions</div>
+        <ul class="feat-list">
+          <li>Compteurs live : <strong>membres / disponibles / sur scène</strong></li>
+          <li>Section <strong>"Mon statut"</strong> : modification en 1 tap</li>
+          <li>Optimistic update + <strong>rollback automatique</strong> si erreur</li>
+          <li>Realtime Supabase : changements visibles <strong>sans rechargement</strong></li>
+          <li>Bouton <strong>💬 Message</strong> → ouvre la conversation privée directe</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <div class="stripe" style="position:absolute;bottom:0;left:0;right:0;height:3px">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     PAGE 4 — ÉVÉNEMENTS
+═════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+  <div class="mod-page">
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-logo"><img src="/logo.jpg" /></div>
+        <span class="page-header-agency">LIL'Z EVENT AGENCY</span>
+      </div>
+      <span class="page-header-page">4 / 9</span>
+    </div>
+
+    <div class="mod-hero" style="background:rgba(255,215,0,0.06);border-color:rgba(255,215,0,0.3)">
+      <div class="mod-icon-wrap" style="background:rgba(255,215,0,0.12)">🎪</div>
+      <div>
+        <div class="mod-hero-title" style="color:#FFD700">Événements</div>
+        <div class="mod-hero-desc">
+          Gestion complète du cycle de vie des événements : création, suivi, checklist des tâches, galerie photos, rapport financier et export PDF.
+          <span class="mod-hero-badge" style="background:rgba(255,215,0,0.12);color:#FFD700;border:1px solid rgba(255,215,0,0.35)">CEO · Admin · Chef de Projet · Event Planner</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sections-grid three" style="margin-bottom:12px">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#FFD700">📋 Gestion des événements</div>
+        <ul class="feat-list">
+          <li>Séparation <strong>À venir / Passés</strong></li>
+          <li><strong>Compte à rebours</strong> live (J-X, heures, minutes)</li>
+          <li>Badge rouge si J-3 ou moins</li>
+          <li>Création : nom, date, lieu, description, statut</li>
+          <li>Modification de tous les champs</li>
+          <li>Suppression avec confirmation</li>
+          <li>Changement de statut en <strong>1 tap</strong></li>
+          <li><strong>Push notification</strong> à toute l'équipe à la création</li>
+        </ul>
+      </div>
+
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#009A44">✅ Checklist par événement</div>
+        <ul class="feat-list">
+          <li><strong>7 tâches types auto-générées</strong> à la création</li>
+          <li>15 tâches prédéfinies disponibles</li>
+          <li>Ajout de tâche libre (texte)</li>
+          <li>Toggle <strong>terminé / non terminé</strong></li>
+          <li>Statuts : À faire · En cours · Terminé</li>
+          <li>Assignation à un <strong>membre de l'équipe</strong></li>
+          <li>Suppression individuelle</li>
+        </ul>
+      </div>
+
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#1E90FF">📸 Photos & Rapport</div>
+        <ul class="feat-list">
+          <li>Upload depuis l'appareil photo / galerie</li>
+          <li>Affichage en <strong>grille</strong></li>
+          <li><strong>Lightbox</strong> : agrandissement au tap</li>
+          <li>Rapport financier : <strong>tickets vendus</strong></li>
+          <li>Total recettes liées à l'événement</li>
+          <li>Total dépenses liées à l'événement</li>
+          <li><strong>Export PDF</strong> de la fiche événement</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25)">
+      <div style="font-size:8pt;font-weight:800;color:#FFD700;margin-bottom:5px">Statuts d'événement</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <span class="role-badge" style="background:rgba(30,144,255,0.12);color:#1E90FF;border:1px solid rgba(30,144,255,0.3)">🔵 En préparation</span>
+        <span class="role-badge" style="background:rgba(0,154,68,0.12);color:#009A44;border:1px solid rgba(0,154,68,0.3)">🟢 Confirmé</span>
+        <span class="role-badge" style="background:rgba(255,215,0,0.12);color:#FFD700;border:1px solid rgba(255,215,0,0.3)">🟡 En cours</span>
+        <span class="role-badge" style="background:rgba(80,80,80,0.3);color:#888;border:1px solid #444">⚫ Terminé</span>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="background:rgba(0,154,68,0.06);border:1px solid rgba(0,154,68,0.25)">
+      <div style="font-size:8pt;font-weight:800;color:#009A44;margin-bottom:5px">Tâches prédéfinies disponibles</div>
+      <div style="font-size:7.5pt;color:#aaa;line-height:1.7">
+        🎵 Sono / Musique &nbsp;·&nbsp; 💡 Lumières / Éclairage &nbsp;·&nbsp; 🎤 Micros / Scène &nbsp;·&nbsp; 🚪 Accueil / Entrées &nbsp;·&nbsp; 🔒 Sécurité &nbsp;·&nbsp;
+        🍽️ Catering / Buffet &nbsp;·&nbsp; 📸 Photographe &nbsp;·&nbsp; 🎬 Vidéo / Retransmission &nbsp;·&nbsp; 🎪 Décoration / Scéno &nbsp;·&nbsp;
+        🪑 Mobilier / Chaises &nbsp;·&nbsp; 📢 Communication &nbsp;·&nbsp; 🚗 Logistique &nbsp;·&nbsp; 🎟️ Billetterie &nbsp;·&nbsp; 🌐 Réseaux sociaux &nbsp;·&nbsp; 🧹 Nettoyage / Rangement
+      </div>
+    </div>
+
+  </div>
+  <div class="stripe" style="position:absolute;bottom:0;left:0;right:0;height:3px">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     PAGE 5 — PLANNING
+═════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+  <div class="mod-page">
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-logo"><img src="/logo.jpg" /></div>
+        <span class="page-header-agency">LIL'Z EVENT AGENCY</span>
+      </div>
+      <span class="page-header-page">5 / 9</span>
+    </div>
+
+    <div class="mod-hero" style="background:rgba(255,154,60,0.06);border-color:rgba(255,154,60,0.3)">
+      <div class="mod-icon-wrap" style="background:rgba(255,154,60,0.12)">📅</div>
+      <div>
+        <div class="mod-hero-title" style="color:#ff9a3c">Planning</div>
+        <div class="mod-hero-desc">
+          Gestion des postes de travail de l'équipe avec vue liste et calendrier semaine. Assignation, alertes avant prise de poste et déplacement mobile-first.
+          <span class="mod-hero-badge" style="background:rgba(255,154,60,0.12);color:#ff9a3c;border:1px solid rgba(255,154,60,0.35)">CEO · Admin · Chef de Projet · Site Manager</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sections-grid" style="margin-bottom:12px">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#ff9a3c">📋 Vue Liste</div>
+        <ul class="feat-list">
+          <li>Tous les postes triés par <strong>date puis heure</strong></li>
+          <li>Indicateur <strong>"Actif maintenant"</strong> (heure en cours)</li>
+          <li>Indicateur <strong>alerte</strong> (démarre / finit dans 30 min)</li>
+          <li>Filtre par date</li>
+          <li>Carte par poste : nom, rôle, heure début/fin, notes</li>
+          <li>Couleur de la carte selon le <strong>rôle assigné</strong></li>
+          <li>Boutons ← → pour <strong>déplacer d'un jour</strong> (iOS-safe)</li>
+          <li>Suppression du poste</li>
+        </ul>
+      </div>
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#1E90FF">📆 Vue Calendrier Semaine</div>
+        <ul class="feat-list">
+          <li>7 colonnes Lun → Dim</li>
+          <li>Navigation <strong>semaine par semaine</strong> (← →)</li>
+          <li>Postes affichés dans la colonne du jour</li>
+          <li>Déplacement ← → entre les colonnes</li>
+          <li>Badges compacts avec heure et poste</li>
+          <li>Colonnes sans overflow (compatible iPhone)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sections-grid">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#009A44">➕ Création de poste</div>
+        <ul class="feat-list">
+          <li>Assignation à un <strong>membre de l'équipe</strong></li>
+          <li>12 types de postes prédéfinis : Entrée, Bar, Scène, Vestiaire, Parking, Coulisses, Sécurité, Accueil VIP, Technique Son, Technique Lumière, Coordination, Autre</li>
+          <li>Date, heure début, heure fin</li>
+          <li>Notes libres</li>
+          <li><strong>Push notification</strong> envoyée à la personne assignée</li>
+        </ul>
+      </div>
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#FFD700">🔔 Alertes & Notifications</div>
+        <ul class="feat-list">
+          <li>Notification locale <strong>30 min avant</strong> chaque prise de poste</li>
+          <li>Recalcul automatique à chaque chargement</li>
+          <li>Fonctionne via l'API <strong>Notification</strong> du navigateur</li>
+          <li>Notification push distante à l'assignation</li>
+          <li>Compatibilité <strong>iOS Safari PWA</strong></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <div class="stripe" style="position:absolute;bottom:0;left:0;right:0;height:3px">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     PAGE 6 — NOTES INTERNES + MESSAGES PRIVÉS
+═════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+  <div class="mod-page">
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-logo"><img src="/logo.jpg" /></div>
+        <span class="page-header-agency">LIL'Z EVENT AGENCY</span>
+      </div>
+      <span class="page-header-page">6 / 9</span>
+    </div>
+
+    <!-- Notes -->
+    <div class="mod-hero" style="background:rgba(0,154,68,0.06);border-color:rgba(0,154,68,0.3);margin-bottom:12px">
+      <div class="mod-icon-wrap" style="background:rgba(0,154,68,0.12)">💬</div>
+      <div>
+        <div class="mod-hero-title" style="color:#009A44">Notes internes — Messagerie groupe</div>
+        <div class="mod-hero-desc">Fil de messages partagé par toute l'équipe. Texte, vocal, photos, mentions, réactions, épinglage et alertes urgentes.</div>
+      </div>
+    </div>
+
+    <div class="sections-grid" style="margin-bottom:16px">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#009A44">✍️ Envoi de messages</div>
+        <ul class="feat-list">
+          <li><strong>Texte</strong> avec toggle urgent (🚨)</li>
+          <li><strong>Message vocal</strong> : enregistrement micro avec timer</li>
+          <li>Support iOS (<strong>audio/mp4</strong>) et Android (<strong>audio/webm</strong>)</li>
+          <li><strong>Photo</strong> : sélection galerie + prévisualisation avant envoi</li>
+          <li>Médias uploadés sur Supabase Storage</li>
+          <li><strong>Réponse</strong> (reply) avec citation du message cible</li>
+          <li><strong>Mentions</strong> @rôle avec autocomplete (11 rôles)</li>
+        </ul>
+      </div>
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#1E90FF">🔖 Gestion des messages</div>
+        <ul class="feat-list">
+          <li>Messages <strong>épinglés</strong> affichés en haut en permanence</li>
+          <li>Filtre <strong>"Urgents uniquement"</strong></li>
+          <li>Réactions emoji : 👍 ❤️ 😂 🔥 👏 😮 (toggle ajout/retrait)</li>
+          <li>Suppression d'un message</li>
+          <li>Mentions surlignées en bleu, URGENT en rouge</li>
+          <li>Scroll auto vers le bas</li>
+          <li><strong>Push notification</strong> à toute l'équipe à chaque envoi</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Messages privés -->
+    <div class="mod-hero" style="background:rgba(30,144,255,0.06);border-color:rgba(30,144,255,0.3);margin-bottom:12px">
+      <div class="mod-icon-wrap" style="background:rgba(30,144,255,0.12)">✉️</div>
+      <div>
+        <div class="mod-hero-title" style="color:#1E90FF">Messages privés — Chat 1:1</div>
+        <div class="mod-hero-desc">Conversations directes entre deux membres. Temps réel, médias, push, son de notification et polling de secours.</div>
+      </div>
+    </div>
+
+    <div class="sections-grid">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#1E90FF">📬 Liste des conversations</div>
+        <ul class="feat-list">
+          <li>Toutes les conversations avec <strong>dernier message</strong></li>
+          <li>Badge <strong>non-lus</strong> (compteur rouge)</li>
+          <li>Heure relative ("5min", "2h", date)</li>
+          <li>Barre de <strong>recherche</strong> par nom</li>
+          <li>Section "Nouvelle conversation" : tous les membres non contactés</li>
+          <li>Aperçu : texte, 🎙️ Vocal ou 📷 Photo</li>
+        </ul>
+      </div>
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#009A44">💬 Conversation ouverte</div>
+        <ul class="feat-list">
+          <li>Bulles séparées par <strong>labels jour</strong> (Aujourd'hui / Hier)</li>
+          <li>Indicateur <strong>lu/non lu</strong> avec timestamp</li>
+          <li>Envoi texte, image, vocal</li>
+          <li>Marquage auto en <strong>lus</strong> à l'ouverture</li>
+          <li><strong>Son</strong> à réception (Web Audio API)</li>
+          <li>Notification navigateur si onglet en arrière-plan</li>
+          <li>Realtime + <strong>polling 3s</strong> (robustesse iOS)</li>
+          <li><strong>Push</strong> envoyé à l'interlocuteur</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <div class="stripe" style="position:absolute;bottom:0;left:0;right:0;height:3px">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     PAGE 7 — BILLETTERIE + MATÉRIEL
+═════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+  <div class="mod-page">
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-logo"><img src="/logo.jpg" /></div>
+        <span class="page-header-agency">LIL'Z EVENT AGENCY</span>
+      </div>
+      <span class="page-header-page">7 / 9</span>
+    </div>
+
+    <!-- Billetterie -->
+    <div class="mod-hero" style="background:rgba(0,154,68,0.06);border-color:rgba(0,154,68,0.3);margin-bottom:12px">
+      <div class="mod-icon-wrap" style="background:rgba(0,154,68,0.12)">🎟️</div>
+      <div>
+        <div class="mod-hero-title" style="color:#009A44">Billetterie</div>
+        <div class="mod-hero-desc">Gestion des réservations clients pour chaque événement. Suivi des présences et compteurs de fréquentation en temps réel.</div>
+      </div>
+    </div>
+
+    <div class="sections-grid" style="margin-bottom:18px">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#009A44">🎫 Réservations</div>
+        <ul class="feat-list">
+          <li>Création : <strong>nom client</strong>, nombre de personnes, statut</li>
+          <li>Changement de statut en <strong>1 tap</strong> (menu déroulant)</li>
+          <li>Suppression avec confirmation</li>
+          <li>Tri par date de création (plus récent en haut)</li>
+          <li>Badge coloré par statut</li>
+        </ul>
+      </div>
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#FFD700">📊 Compteurs</div>
+        <ul class="feat-list">
+          <li>Total des <strong>réservations</strong></li>
+          <li>Total des <strong>personnes attendues</strong> (hors annulé/no-show)</li>
+          <li>Total des <strong>personnes présentes</strong></li>
+        </ul>
+        <div style="margin-top:10px">
+          <div style="font-size:7pt;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Statuts disponibles</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            <span class="role-badge" style="background:rgba(255,215,0,0.1);color:#FFD700;border:1px solid rgba(255,215,0,0.3)">En attente</span>
+            <span class="role-badge" style="background:rgba(30,144,255,0.1);color:#1E90FF;border:1px solid rgba(30,144,255,0.3)">Confirmée</span>
+            <span class="role-badge" style="background:rgba(0,154,68,0.1);color:#009A44;border:1px solid rgba(0,154,68,0.3)">Présent</span>
+            <span class="role-badge" style="background:rgba(255,107,107,0.1);color:#ff6b6b;border:1px solid rgba(255,107,107,0.3)">No-show</span>
+            <span class="role-badge" style="background:rgba(80,80,80,0.2);color:#888;border:1px solid #444">Annulée</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Matériel -->
+    <div class="mod-hero" style="background:rgba(180,122,255,0.06);border-color:rgba(180,122,255,0.3);margin-bottom:12px">
+      <div class="mod-icon-wrap" style="background:rgba(180,122,255,0.12)">🔧</div>
+      <div>
+        <div class="mod-hero-title" style="color:#b47aff">Matériel technique</div>
+        <div class="mod-hero-desc">
+          Inventaire du matériel disponible et liste des besoins à prévoir. Suivi des états, priorités, filtres et recherche.
+          <span class="mod-hero-badge" style="background:rgba(180,122,255,0.12);color:#b47aff;border:1px solid rgba(180,122,255,0.35)">CEO · Admin · Régisseurs (modification)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sections-grid">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#b47aff">📦 Inventaire & Besoins</div>
+        <ul class="feat-list">
+          <li>Onglet <strong>Matériel prévu</strong> (inventaire actuel)</li>
+          <li>Onglet <strong>À prévoir</strong> (liste des besoins)</li>
+          <li>Compteurs : total prévu / à prévoir / <strong>problèmes</strong></li>
+          <li>Ajout : nom, catégorie, quantité, état, note, priorité</li>
+          <li>Modification et suppression</li>
+          <li>Rôles non autorisés : <strong>mode lecture seule</strong></li>
+        </ul>
+      </div>
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#1E90FF">🔍 Filtres & Tri</div>
+        <ul class="feat-list">
+          <li><strong>Recherche</strong> par nom ou catégorie</li>
+          <li>Filtre par catégorie : Son · Lumière · Décor · Mobilier · Scène · Autre</li>
+          <li>Tri : par date · par état (gravité) · par nom</li>
+          <li>États : OK · Manquant · Fragile · Usé · À réparer</li>
+          <li>Priorités : Urgent · Normal · Optionnel</li>
+          <li>Badges <strong>colorés par gravité</strong></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <div class="stripe" style="position:absolute;bottom:0;left:0;right:0;height:3px">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     PAGE 8 — FINANCES
+═════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+  <div class="mod-page">
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-logo"><img src="/logo.jpg" /></div>
+        <span class="page-header-agency">LIL'Z EVENT AGENCY</span>
+      </div>
+      <span class="page-header-page">8 / 9</span>
+    </div>
+
+    <div class="mod-hero" style="background:rgba(0,154,68,0.06);border-color:rgba(0,154,68,0.3)">
+      <div class="mod-icon-wrap" style="background:rgba(0,154,68,0.12)">💰</div>
+      <div>
+        <div class="mod-hero-title" style="color:#009A44">Finances</div>
+        <div class="mod-hero-desc">
+          Suivi complet des recettes et dépenses de l'agence. Budget prévisionnel, graphique mensuel SVG et indicateurs de performance financière.
+          <span class="mod-hero-badge" style="background:rgba(228,0,43,0.12);color:#E4002B;border:1px solid rgba(228,0,43,0.35)">🔒 Accès restreint</span>
+          <span class="mod-hero-badge" style="background:rgba(255,215,0,0.12);color:#FFD700;border:1px solid rgba(255,215,0,0.35)">CEO / Admin</span>
+          <span class="mod-hero-badge" style="background:rgba(0,154,68,0.12);color:#009A44;border:1px solid rgba(0,154,68,0.35)">Responsable Financier</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-strip">
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:#009A44">Recettes</div>
+        <div class="kpi-lbl">Total entrées</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:#E4002B">Dépenses</div>
+        <div class="kpi-lbl">Total sorties</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:#FFD700">Solde net</div>
+        <div class="kpi-lbl">Recettes − Dépenses</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" style="color:#1E90FF">Budget %</div>
+        <div class="kpi-lbl">Taux consommation</div>
+      </div>
+    </div>
+
+    <div class="sections-grid three" style="margin-bottom:12px">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#009A44">📝 Saisie des écritures</div>
+        <ul class="feat-list">
+          <li>Libellé descriptif</li>
+          <li>Montant en <strong>Francs Congolais (FC)</strong></li>
+          <li>Type : <strong>Recette</strong> ou <strong>Dépense</strong></li>
+          <li>Catégorie selon le type</li>
+          <li>Date de l'opération</li>
+          <li>Suppression avec <strong>rollback</strong> si erreur</li>
+          <li>Filtre : Tout / Recettes / Dépenses</li>
+        </ul>
+      </div>
+
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#FFD700">🎯 Budget prévisionnel</div>
+        <ul class="feat-list">
+          <li>Saisie d'un budget cible</li>
+          <li>Persisté en <strong>localStorage</strong></li>
+          <li>Barre de progression visuelle</li>
+          <li>Alerte colorée si <strong>budget dépassé</strong></li>
+          <li>Calcul du <strong>taux de consommation</strong> en %</li>
+        </ul>
+      </div>
+
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#1E90FF">📊 Graphique mensuel</div>
+        <ul class="feat-list">
+          <li>Barres <strong>Recettes vs Dépenses</strong></li>
+          <li>6 derniers mois affichés</li>
+          <li>Axes auto-calibrés</li>
+          <li>Rendu <strong>SVG natif</strong> (pas de lib externe)</li>
+          <li>Responsive (s'adapte à la largeur)</li>
+          <li>Compatible thème clair et sombre</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="highlight-box" style="background:rgba(0,154,68,0.06);border:1px solid rgba(0,154,68,0.25);margin-bottom:0">
+        <div style="font-size:7.5pt;font-weight:800;color:#009A44;margin-bottom:6px">Catégories Recettes</div>
+        <div style="font-size:7.5pt;color:#aaa;line-height:1.8">
+          Billetterie &nbsp;·&nbsp; Sponsoring &nbsp;·&nbsp; Subvention &nbsp;·&nbsp; Vente bar &nbsp;·&nbsp; Vente merch &nbsp;·&nbsp; Autre
+        </div>
+      </div>
+      <div class="highlight-box" style="background:rgba(228,0,43,0.06);border:1px solid rgba(228,0,43,0.25);margin-bottom:0">
+        <div style="font-size:7.5pt;font-weight:800;color:#E4002B;margin-bottom:6px">Catégories Dépenses</div>
+        <div style="font-size:7.5pt;color:#aaa;line-height:1.8">
+          Logistique &nbsp;·&nbsp; Personnel &nbsp;·&nbsp; Matériel &nbsp;·&nbsp; Communication &nbsp;·&nbsp; Autre
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="stripe" style="position:absolute;bottom:0;left:0;right:0;height:3px">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     PAGE 9 — INFRASTRUCTURE & CLÔTURE
+═════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+  <div class="mod-page">
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-logo"><img src="/logo.jpg" /></div>
+        <span class="page-header-agency">LIL'Z EVENT AGENCY</span>
+      </div>
+      <span class="page-header-page">9 / 9</span>
+    </div>
+
+    <div class="mod-hero" style="background:rgba(255,107,107,0.06);border-color:rgba(255,107,107,0.3);margin-bottom:16px">
+      <div class="mod-icon-wrap" style="background:rgba(255,107,107,0.12)">⚙️</div>
+      <div>
+        <div class="mod-hero-title" style="color:#ff6b6b">Infrastructure & Fonctions transversales</div>
+        <div class="mod-hero-desc">Socle technique de l'application : PWA, notifications push, temps réel, thème, authentification et sécurité par rôle.</div>
+      </div>
+    </div>
+
+    <div class="sections-grid three" style="margin-bottom:14px">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#009A44">📱 PWA & Mobile</div>
+        <ul class="feat-list">
+          <li><strong>Installable</strong> sur l'écran d'accueil iPhone / Android</li>
+          <li>Service Worker v2 avec <strong>cache réseau-first</strong></li>
+          <li>Page <strong>hors-ligne</strong> personnalisée</li>
+          <li>Icônes iOS / Android adaptées</li>
+          <li>Compatible <strong>Safari iOS 16.4+</strong></li>
+          <li>Interface <strong>safe-area</strong> (encoche, barre d'accueil)</li>
+        </ul>
+      </div>
+
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#1E90FF">🔔 Notifications Push</div>
+        <ul class="feat-list">
+          <li>Standard <strong>VAPID web-push</strong></li>
+          <li>Abonnement depuis le Dashboard</li>
+          <li>Activation <strong>iOS-safe</strong> (gesture context)</li>
+          <li>Réception même <strong>app fermée</strong></li>
+          <li>Envoi via API sécurisée (<strong>JWT</strong>)</li>
+          <li>Stockage dans Supabase (<strong>RLS</strong>)</li>
+        </ul>
+      </div>
+
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#FFD700">⚡ Temps réel & Sync</div>
+        <ul class="feat-list">
+          <li>Supabase <strong>Realtime</strong> (postgres_changes)</li>
+          <li>Polling fallback <strong>toutes les 3s</strong> (iOS)</li>
+          <li>Optimistic updates + <strong>rollback</strong></li>
+          <li>Scroll automatique vers les nouveaux messages</li>
+          <li>Rafraîchissement périodique (équipe, alertes)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sections-grid" style="margin-bottom:14px">
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#b47aff">🔒 Sécurité & Accès</div>
+        <ul class="feat-list">
+          <li>Authentification <strong>Supabase Auth</strong> (email/password)</li>
+          <li><strong>Row Level Security</strong> (RLS) sur toutes les tables</li>
+          <li>Accès par rôle sur chaque module</li>
+          <li>Module Finances : accès restreint avec <strong>page de blocage</strong></li>
+          <li>JWT Authorization header (robustesse API routes)</li>
+          <li>Sessions persistantes (refresh token)</li>
+        </ul>
+      </div>
+      <div class="feat-section">
+        <div class="feat-section-title" style="color:#ff9a3c">🎨 Interface</div>
+        <ul class="feat-list">
+          <li>Thème <strong>clair / sombre</strong> global persisté</li>
+          <li>Couleurs <strong>comoriennes</strong> : vert, rouge, blanc, bleu, or</li>
+          <li>Bande décorative tricolore sur toutes les pages</li>
+          <li>Badges rôles colorés cohérents dans toute l'app</li>
+          <li>BottomNav persistante (navigation bas d'écran)</li>
+          <li>Animations d'entrée sur les listes</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Signature / clôture -->
+    <div style="background:#111;border:1px solid #1f3d25;border-radius:14px;padding:20px 24px;text-align:center">
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px">
+        <img src="/logo.jpg" style="width:40px;height:40px;border-radius:10px;object-fit:cover;border:1.5px solid rgba(0,154,68,0.5)" />
+        <div>
+          <div style="font-size:13pt;font-weight:900;color:#fff">LIL'Z EVENT AGENCY</div>
+          <div style="font-size:7pt;color:#009A44;letter-spacing:0.2em;text-transform:uppercase;font-weight:700">Espace équipe · Application interne</div>
+        </div>
+      </div>
+      <div style="display:flex;width:180px;height:2px;border-radius:999px;overflow:hidden;margin:0 auto 14px">
+        <span style="flex:1;background:#009A44"></span>
+        <span style="flex:1;background:rgba(255,255,255,0.4)"></span>
+        <span style="flex:1;background:#E4002B"></span>
+        <span style="flex:1;background:#1E90FF"></span>
+        <span style="flex:1;background:#FFD700"></span>
+      </div>
+      <div style="font-size:9pt;font-style:italic;color:#555;margin-bottom:6px">Chaque instant marque l'histoire</div>
+      <div style="font-size:7.5pt;color:#444">Développée par <span style="color:#009A44;font-weight:700">Kylian Cheikh Ahmed</span></div>
+    </div>
+
+  </div>
+  <div class="stripe" style="position:absolute;bottom:0;left:0;right:0;height:3px">
+    <span style="background:#009A44"></span><span style="background:rgba(255,255,255,0.3)"></span>
+    <span style="background:#E4002B"></span><span style="background:#1E90FF"></span><span style="background:#FFD700"></span>
+  </div>
+</div>
+
+</body>
+</html>

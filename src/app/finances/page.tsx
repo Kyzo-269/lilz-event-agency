@@ -31,15 +31,15 @@ function fmtDate(d: string) {
 }
 
 function fmtMontant(n: number) {
-  return new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(Math.round(n)) + " FC";
+  return new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(Math.round(n)) + " KMF";
 }
 
 // Formate un montant court pour les axes du graphique
 function fmtK(n: number): string {
-  if (n >= 1000000) return Math.round(n / 1000000) + "MFC";
-  if (n >= 10000) return Math.round(n / 1000) + "kFC";
-  if (n >= 1000) return (n / 1000).toFixed(1) + "kFC";
-  return Math.round(n) + " FC";
+  if (n >= 1000000) return Math.round(n / 1000000) + "M KMF";
+  if (n >= 10000) return Math.round(n / 1000) + "k KMF";
+  if (n >= 1000) return (n / 1000).toFixed(1) + "k KMF";
+  return Math.round(n) + " KMF";
 }
 
 // ── Graphique mensuel ─────────────────────────────────────────
@@ -368,7 +368,7 @@ export default function FinancesPage() {
                     : `${Math.round(budgetPct)}% utilisé`}
                 </span>
                 <span style={{ fontSize: 11, color: T.sub }}>
-                  Restant : {budgetOver ? "0 €" : fmtMontant(budget - totalDepenses)}
+                  Restant : {budgetOver ? "0 KMF" : fmtMontant(budget - totalDepenses)}
                 </span>
               </div>
             </div>
@@ -436,7 +436,7 @@ export default function FinancesPage() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               <div>
-                <label style={lbl}>Montant (€) *</label>
+                <label style={lbl}>Montant (KMF) *</label>
                 <input style={inp} required placeholder="0.00" value={fMontant} onChange={e => setFMontant(e.target.value)} inputMode="decimal" />
               </div>
               <div>

@@ -87,6 +87,7 @@ export default function EquipePage() {
     const { data } = await supabase
       .from("profiles")
       .select("id, full_name, role, email, last_seen, statut_presence")
+      .neq("role", "Admin")
       .order("role", { ascending: true });
     if (data) {
       const sorted = [...(data as Member[])].sort((a, b) => {

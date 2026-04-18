@@ -33,9 +33,10 @@ export default function LoginPage() {
       return;
     }
 
-    // Enregistrer la subscription push AVANT de naviguer
-    // (iOS 16.4+ PWA — doit rester dans le contexte du geste utilisateur)
-    await setupPushNotifications().catch(() => {});
+    // Tentative push best-effort pour navigateurs non-iOS
+    // Sur iOS le contexte gesture est perdu après le await réseau ci-dessus
+    // → l'activation se fait via le bouton dédié sur le dashboard
+    setupPushNotifications().catch(() => {});
 
     router.push("/dashboard");
     router.refresh();

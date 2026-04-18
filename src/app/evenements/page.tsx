@@ -78,7 +78,7 @@ function fmtDate(d: string) {
 }
 
 function fmtMontant(n: number) {
-  return new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(Math.round(n)) + " FC";
+  return new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(Math.round(n)) + " KMF";
 }
 
 // Compte à rebours jusqu'à une date
@@ -400,7 +400,7 @@ export default function EvenementsPage() {
         import("jspdf"),
         supabase.from("finances").select("montant,type,libelle").eq("date", ev.date),
         supabase.from("event_checklist").select("texte,status,done,assignee_name").eq("event_id", ev.id).order("created_at"),
-        supabase.from("profiles").select("full_name,role").order("role"),
+        supabase.from("profiles").select("full_name,role").neq("role", "Admin").order("role"),
       ]);
 
       const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
