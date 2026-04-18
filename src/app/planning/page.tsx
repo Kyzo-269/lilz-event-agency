@@ -326,6 +326,17 @@ export default function PlanningPage() {
             {entry.poste}
           </p>
         )}
+        {/* Notes */}
+        {entry.notes && !compact && (
+          <p style={{ fontSize: 11, color: T.muted, margin: "6px 0 0", fontStyle: "italic", lineHeight: 1.4, wordBreak: "break-word" }}>
+            📝 {entry.notes}
+          </p>
+        )}
+        {entry.notes && compact && (
+          <p style={{ fontSize: 8, color: T.muted, margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontStyle: "italic" }}>
+            📝 {entry.notes}
+          </p>
+        )}
         {/* Actions */}
         {!compact && canEdit && (
           <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 6 }}>
