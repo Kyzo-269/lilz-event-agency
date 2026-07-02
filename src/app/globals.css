@@ -273,3 +273,16 @@ html[data-theme="light"] .btn-primary {
     @apply flex h-0.5 flex-shrink-0;
   }
 }
+
+/* Grille des modules du dashboard — 2 colonnes mobile, 3 tablette, 4 desktop */
+.dashboard-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (min-width: 640px) {
+  .dashboard-modules-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 900px) {
+  .dashboard-modules-grid { grid-template-columns: repeat(4, 1fr); }
+}

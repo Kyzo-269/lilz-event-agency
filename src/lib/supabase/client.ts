@@ -13,9 +13,18 @@ function realClient() {
   );
 }
 
+// Le vrai createBrowserClient() est un singleton interne (isSingleton) — il
+// renvoie toujours la même référence. Le faux client doit avoir le même
+// comportement, sinon chaque `const supabase = createClient()` dans un
+// composant produit une nouvelle référence à chaque rendu, ce qui casse
+// tous les useCallback/useEffect([supabase]) de l'app (boucle de rendu
+// infinie → page qui se fige et navigation qui ne répond plus).
+let demoClientSingleton: ReturnType<typeof createDemoClient> | null = null;
+
 export function createClient() {
   if (isDemoMode) {
-    return createDemoClient() as unknown as ReturnType<typeof realClient>;
+    if (!demoClientSingleton) demoClientSingleton = createDemoClient();
+    return demoClientSingleton as unknown as ReturnType<typeof realClient>;
   }
   return realClient();
 }

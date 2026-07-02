@@ -392,11 +392,10 @@ export default function DashboardPage() {
       )}
 
       <main style={{
-        flex: 1,
-        maxWidth: 1200,
+        maxWidth: 960,
         margin: "0 auto",
         width: "100%",
-        padding: "20px 16px 0",
+        padding: "20px 16px 40px",
         display: "flex",
         flexDirection: "column",
         gap: 18,
@@ -510,7 +509,7 @@ export default function DashboardPage() {
           }}>
             Modules
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 10 }}>
+          <div className="dashboard-modules-grid">
             {MODULES.map((mod, i) => {
               if (mod.financeOnly && !isFinance && !isDemoMode) return null;
               return (
