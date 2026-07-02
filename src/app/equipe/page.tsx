@@ -34,6 +34,13 @@ const ROLE_STYLE: Record<string, { color: string; bg: string; border: string }> 
   "Régisseur de production 2":   { color: "#ff6b6b", bg: "#1a0005",  border: "#8a0015"  },
   "Régisseur de production 3":   { color: "#ff6b6b", bg: "#1a0005",  border: "#8a0015"  },
   "Régisseur de production 4":   { color: "#ff6b6b", bg: "#1a0005",  border: "#8a0015"  },
+  "Régisseur Production":        { color: "#ff6b6b", bg: "#1a0005",  border: "#8a0015"  },
+  "Chef de projet événementiel": { color: "#1E90FF", bg: "#001428",  border: "#0a4a8a"  },
+  "Chargé de partenariats et sponsoring": { color: "#ff69b4", bg: "#1a0012", border: "#7a0060" },
+  "Scénographe":                 { color: "#ff9a3c", bg: "#1a0d00",  border: "#7a4000"  },
+  "Régie - Scénographe":         { color: "#ff9a3c", bg: "#1a0d00",  border: "#7a4000"  },
+  "Responsable Financière":      { color: "#009A44", bg: "#001a0d",  border: "#005c28"  },
+  "Conseillère Financière":      { color: "#009A44", bg: "#001a0d",  border: "#005c28"  },
 };
 
 // ── Config statut de présence ─────────────────────────────────

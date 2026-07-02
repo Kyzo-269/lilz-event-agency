@@ -45,6 +45,12 @@ const ROLE_COLOR: Record<string, string> = {
   "Site Manager":                "#ff9a3c",
   "Advisor":                     "#b47aff",
   "Event Planner":               "#22d3ee",
+  "Chef de projet événementiel": "#1E90FF",
+  "Chargé de partenariats et sponsoring": "#ff69b4",
+  "Scénographe":                 "#ff9a3c",
+  "Régie - Scénographe":         "#ff9a3c",
+  "Responsable Financière":      "#009A44",
+  "Conseillère Financière":      "#009A44",
 };
 
 function getRoleColor(role: string): string {

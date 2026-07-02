@@ -21,6 +21,13 @@ const ROLE_STYLE: Record<string, { color: string; bg: string; border: string }> 
   "Régisseur de production 2":   { color: "#ff6b6b", bg: "#1a0005",  border: "#8a0015" },
   "Régisseur de production 3":   { color: "#ff6b6b", bg: "#1a0005",  border: "#8a0015" },
   "Régisseur de production 4":   { color: "#ff6b6b", bg: "#1a0005",  border: "#8a0015" },
+  "Régisseur Production":        { color: "#ff6b6b", bg: "#1a0005",  border: "#8a0015" },
+  "Chef de projet événementiel": { color: "#1E90FF", bg: "#001428",  border: "#0a4a8a" },
+  "Chargé de partenariats et sponsoring": { color: "#ff69b4", bg: "#1a0012", border: "#7a0060" },
+  "Scénographe":                 { color: "#ff9a3c", bg: "#1a0d00",  border: "#7a4000" },
+  "Régie - Scénographe":         { color: "#ff9a3c", bg: "#1a0d00",  border: "#7a4000" },
+  "Responsable Financière":      { color: "#009A44", bg: "#001a0d",  border: "#005c28" },
+  "Conseillère Financière":      { color: "#009A44", bg: "#001a0d",  border: "#005c28" },
 };
 
 const ROLE_STYLE_LIGHT: Record<string, { color: string; bg: string; border: string }> = {
@@ -36,6 +43,13 @@ const ROLE_STYLE_LIGHT: Record<string, { color: string; bg: string; border: stri
   "Régisseur de production 2":   { color: "#c62828", bg: "#ffebee",  border: "#ef9a9a" },
   "Régisseur de production 3":   { color: "#c62828", bg: "#ffebee",  border: "#ef9a9a" },
   "Régisseur de production 4":   { color: "#c62828", bg: "#ffebee",  border: "#ef9a9a" },
+  "Régisseur Production":        { color: "#c62828", bg: "#ffebee",  border: "#ef9a9a" },
+  "Chef de projet événementiel": { color: "#1565C0", bg: "#e8f1fd",  border: "#90b8f0" },
+  "Chargé de partenariats et sponsoring": { color: "#c2185b", bg: "#fce4ec", border: "#f48fb1" },
+  "Scénographe":                 { color: "#e65100", bg: "#fff3e0",  border: "#ffb74d" },
+  "Régie - Scénographe":         { color: "#e65100", bg: "#fff3e0",  border: "#ffb74d" },
+  "Responsable Financière":      { color: "#007a35", bg: "#e6f7ed",  border: "#8ad4a5" },
+  "Conseillère Financière":      { color: "#007a35", bg: "#e6f7ed",  border: "#8ad4a5" },
 };
 
 // ── Modules ────────────────────────────────────────────────────
