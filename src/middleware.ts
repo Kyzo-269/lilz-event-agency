@@ -1,8 +1,30 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const protectedPaths = ["/dashboard", "/billetterie", "/materiel", "/planning", "/notes", "/finances", "/equipe", "/evenements"];
+
 // Le middleware tourne sur chaque requête et rafraîchit la session automatiquement
 export async function middleware(request: NextRequest) {
+  // Mode démo : aucune vraie session Supabase, on lit un simple cookie
+  // posé par le faux client (src/lib/demo/mockClient.ts) et on ne contacte
+  // jamais le vrai projet Supabase.
+  if (process.env.NEXT_PUBLIC_DEMO_MODE === "true") {
+    const demoUid = request.cookies.get("demo_uid")?.value ?? null;
+    const isProtected = protectedPaths.some((p) => request.nextUrl.pathname.startsWith(p));
+
+    if (!demoUid && isProtected) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
+    if (demoUid && request.nextUrl.pathname === "/login") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -32,7 +54,6 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Redirige vers /login si non connecté et accès à une page protégée
-  const protectedPaths = ["/dashboard", "/billetterie", "/materiel", "/planning", "/notes", "/finances", "/equipe", "/evenements"];
   const isProtected = protectedPaths.some((p) =>
     request.nextUrl.pathname.startsWith(p)
   );
