@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isDemoMode } from "@/lib/supabase/client";
 import BottomNav from "@/components/ui/BottomNav";
 import { useTheme } from "@/lib/ThemeProvider";
 
@@ -191,7 +191,7 @@ export default function FinancesPage() {
   }
 
   // ── Accès refusé ─────────────────────────────────────────────
-  if (!checkingRole && userRole !== null && !ROLES_AUTORISES.includes(userRole)) {
+  if (!isDemoMode && !checkingRole && userRole !== null && !ROLES_AUTORISES.includes(userRole)) {
     return (
       <div style={{ backgroundColor: "#0a0a0a", minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24 }}>
         <div style={{ backgroundColor: "#1a0005", border: "2px solid #E4002B", borderRadius: 20, padding: "40px 32px", textAlign: "center", maxWidth: 360 }}>
@@ -268,7 +268,7 @@ export default function FinancesPage() {
 
       {/* Header */}
       <header style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: T.headerBg, borderBottom: `1px solid ${T.brd}`, padding: "10px 16px" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 672, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Link href="/dashboard" style={{ color: T.sub, lineHeight: 0 }}>
               <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
@@ -290,7 +290,7 @@ export default function FinancesPage() {
         {["#009A44","rgba(255,255,255,0.5)","#E4002B","#1E90FF","#FFD700"].map((c,i)=><div key={i} style={{flex:1,backgroundColor:c}}/>)}
       </div>
 
-      <main style={{ flex: 1, maxWidth: 672, margin: "0 auto", width: "100%", padding: "20px 16px", display: "flex", flexDirection: "column", gap: 18 }}>
+      <main style={{ flex: 1, maxWidth: 1200, margin: "0 auto", width: "100%", padding: "20px 16px", display: "flex", flexDirection: "column", gap: 18 }}>
 
         {/* ── Bilan ── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>

@@ -71,3 +71,6 @@ restart.ps1
 .parcel-cache/
 coverage/
 .nyc_output/
+
+.vercel
+.env*

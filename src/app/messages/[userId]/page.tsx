@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isDemoMode } from "@/lib/supabase/client";
 import { useTheme } from "@/lib/ThemeProvider";
 import { sendPushTo } from "@/hooks/usePushNotifications";
 
@@ -64,6 +64,7 @@ function playNotifSound() {
 
 // Notification navigateur
 function showNotif(title: string, body: string) {
+  if (isDemoMode) return;
   if (typeof Notification === "undefined") return;
   if (Notification.permission === "granted") {
     new Notification(title, { body, icon: "/logo.jpg", badge: "/logo.jpg" });
@@ -164,6 +165,7 @@ export default function ConversationPage() {
 
   // Demander permission notif au montage
   useEffect(() => {
+    if (isDemoMode) return;
     if (typeof Notification !== "undefined" && Notification.permission === "default") {
       Notification.requestPermission();
     }
@@ -382,7 +384,7 @@ export default function ConversationPage() {
         padding: "10px 16px",
         backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, maxWidth: 672, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, maxWidth: 1200, margin: "0 auto" }}>
           <button onClick={() => router.back()}
             style={{ color: T.sub, background: "none", border: "none", cursor: "pointer", padding: 4, lineHeight: 0, flexShrink: 0 }}>
             <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -540,7 +542,7 @@ export default function ConversationPage() {
           </div>
         )}
 
-        <div style={{ display: "flex", gap: 8, alignItems: "flex-end", maxWidth: 672, margin: "0 auto" }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "flex-end", maxWidth: 1200, margin: "0 auto" }}>
 
           {/* Bouton photo */}
           <label style={{

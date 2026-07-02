@@ -1,7 +1,7 @@
 import { createBrowserClient } from "@supabase/ssr";
 import { createDemoClient } from "@/lib/demo/mockClient";
 
-const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+export const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 // Client Supabase pour le navigateur (composants React côté client)
 // En mode démo (NEXT_PUBLIC_DEMO_MODE=true) : aucune connexion réseau,

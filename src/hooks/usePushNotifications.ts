@@ -1,6 +1,6 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isDemoMode } from "@/lib/supabase/client";
 
 // ── Helper : convertit la clé VAPID base64 en Uint8Array ─────
 function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
@@ -20,6 +20,7 @@ export function isPushSupported(): boolean {
 
 // ── Demande la permission + abonne l'appareil ────────────────
 export async function setupPushNotifications(): Promise<boolean> {
+  if (isDemoMode) return false;
   if (!isPushSupported()) {
     console.log("[push] Non supporté sur ce navigateur/appareil");
     return false;
@@ -139,6 +140,7 @@ export async function sendPushTo(params: {
   url?: string;
   tag?: string;
 }): Promise<void> {
+  if (isDemoMode) return;
   try {
     const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();

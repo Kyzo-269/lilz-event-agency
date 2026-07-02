@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isDemoMode } from "@/lib/supabase/client";
 import BottomNav from "@/components/ui/BottomNav";
 import { useTheme } from "@/lib/ThemeProvider";
 import { sendPushTo } from "@/hooks/usePushNotifications";
@@ -162,7 +162,7 @@ export default function EvenementsPage() {
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
-  const canEdit = userRole ? CAN_EDIT.includes(userRole) : false;
+  const canEdit = isDemoMode ? true : userRole ? CAN_EDIT.includes(userRole) : false;
   const today = new Date().toISOString().slice(0, 10);
   const aVenir = events.filter(e => e.date >= today && e.statut !== "Terminé");
   const passés  = events.filter(e => e.date < today  || e.statut === "Terminé");
@@ -894,7 +894,7 @@ export default function EvenementsPage() {
 
       {/* Header */}
       <header style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: T.headerBg, borderBottom: `1px solid ${T.brd}`, padding: "10px 16px" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 672, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Link href="/dashboard" style={{ color: T.sub, lineHeight: 0 }}>
               <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
@@ -916,7 +916,7 @@ export default function EvenementsPage() {
         {["#009A44","rgba(255,255,255,0.5)","#E4002B","#1E90FF","#FFD700"].map((c,i)=><div key={i} style={{flex:1,backgroundColor:c}}/>)}
       </div>
 
-      <main style={{ flex: 1, maxWidth: 672, margin: "0 auto", width: "100%", padding: "20px 16px", display: "flex", flexDirection: "column", gap: 20 }}>
+      <main style={{ flex: 1, maxWidth: 1200, margin: "0 auto", width: "100%", padding: "20px 16px", display: "flex", flexDirection: "column", gap: 20 }}>
 
         {/* Compteurs */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isDemoMode } from "@/lib/supabase/client";
 import { useTheme } from "@/lib/ThemeProvider";
 import BottomNav from "@/components/ui/BottomNav";
 
@@ -139,7 +139,7 @@ export default function MaterielPage() {
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
-  const canEdit = userRole ? ROLES_AUTORISES.includes(userRole) : false;
+  const canEdit = isDemoMode ? true : userRole ? ROLES_AUTORISES.includes(userRole) : false;
 
   // ── Données filtrées & triées ─────────────────────────────
   const filteredPrevu = useMemo(() => {
@@ -393,7 +393,7 @@ export default function MaterielPage() {
         padding: "10px 16px",
         transition: "background-color 0.3s, border-color 0.3s",
       }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 672, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Link href="/dashboard" style={{ color: T.textSub, lineHeight: 0, padding: 2 }}>
               <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -419,7 +419,7 @@ export default function MaterielPage() {
         )}
       </div>
 
-      <main style={{ flex: 1, maxWidth: 672, margin: "0 auto", width: "100%", padding: "16px 16px 0", display: "flex", flexDirection: "column", gap: 14, transition: "background-color 0.3s" }}>
+      <main style={{ flex: 1, maxWidth: 1200, margin: "0 auto", width: "100%", padding: "16px 16px 0", display: "flex", flexDirection: "column", gap: 14, transition: "background-color 0.3s" }}>
 
         {/* ── Barre recherche + bouton ajouter ── */}
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>

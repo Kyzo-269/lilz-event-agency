@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isDemoMode } from "@/lib/supabase/client";
 import { useTheme } from "@/lib/ThemeProvider";
 import BottomNav from "@/components/ui/BottomNav";
 import { isPushSupported, setupPushNotifications } from "@/hooks/usePushNotifications";
@@ -162,7 +162,7 @@ export default function DashboardPage() {
 
   // ── Push notifications ─────────────────────────────────────
   type PushState = "unknown" | "granted" | "denied" | "unsupported" | "activating" | "done";
-  const [pushState, setPushState] = useState<PushState>("unknown");
+  const [pushState, setPushState] = useState<PushState>(isDemoMode ? "unsupported" : "unknown");
 
   // ── Palette selon le thème ─────────────────────────────────
   const T = {
@@ -207,6 +207,7 @@ export default function DashboardPage() {
 
   // Vérifie l'état des notifications push au montage
   useEffect(() => {
+    if (isDemoMode) { setPushState("unsupported"); return; }
     if (!isPushSupported()) { setPushState("unsupported"); return; }
     if (typeof Notification === "undefined") { setPushState("unsupported"); return; }
     if (Notification.permission === "granted") setPushState("granted");
@@ -265,7 +266,7 @@ export default function DashboardPage() {
         padding: "10px 16px",
         transition: "background-color 0.3s, border-color 0.3s",
       }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 672, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${T.borderMain}`, lineHeight: 0 }}>
               <Image src="/logo.jpg" alt="LIL'Z" width={72} height={72} quality={100}
@@ -349,7 +350,7 @@ export default function DashboardPage() {
       {/* ── Bandeau activation notifications push ── */}
       {(pushState === "unknown" || pushState === "activating" || pushState === "done" || pushState === "denied") && (
         <div style={{
-          maxWidth: 672, margin: "0 auto", width: "100%",
+          maxWidth: 1200, margin: "0 auto", width: "100%",
           padding: pushState === "done" ? "6px 16px" : "10px 16px",
           transition: "padding 0.3s",
         }}>
@@ -392,7 +393,7 @@ export default function DashboardPage() {
 
       <main style={{
         flex: 1,
-        maxWidth: 672,
+        maxWidth: 1200,
         margin: "0 auto",
         width: "100%",
         padding: "20px 16px 0",
@@ -509,9 +510,9 @@ export default function DashboardPage() {
           }}>
             Modules
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 10 }}>
             {MODULES.map((mod, i) => {
-              if (mod.financeOnly && !isFinance) return null;
+              if (mod.financeOnly && !isFinance && !isDemoMode) return null;
               return (
                 <a
                   key={mod.href}
