@@ -106,7 +106,7 @@ export default function BottomNav() {
       borderTop: `1px solid ${navBrd}`,
       paddingBottom: "env(safe-area-inset-bottom)",
     }}>
-      <div style={{ display: "flex", maxWidth: 1200, margin: "0 auto" }}>
+      <div style={{ display: "flex", maxWidth: "min(1600px, 94vw)", margin: "0 auto" }}>
         {NAV.map(({ href, label, icon }) => {
           const active = pathname === href ||
             (href !== "/dashboard" && pathname.startsWith(href));

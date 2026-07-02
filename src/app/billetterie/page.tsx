@@ -134,7 +134,7 @@ export default function BilletteriePage() {
   const S = {
     page:    { backgroundColor: T.bg,  minHeight: "100dvh", display: "flex", flexDirection: "column" as const, transition: "background-color 0.3s" },
     header:  { position: "sticky" as const, top: 0, zIndex: 10, backgroundColor: isDark ? "rgba(8,8,8,0.96)" : "rgba(255,255,255,0.97)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", borderBottom: `1px solid ${T.brd}`, padding: "10px 16px", transition: "background-color 0.3s, border-color 0.3s" },
-    hInner:  { display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 1200, margin: "0 auto" },
+    hInner:  { display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: "min(1600px, 94vw)", margin: "0 auto" },
     hLeft:   { display: "flex", alignItems: "center", gap: 10 },
     logoBox: { borderRadius: 10, overflow: "hidden", border: `1px solid ${T.brd}`, lineHeight: 0 },
     hTitle:  { fontSize: 12, fontWeight: 800, color: T.txt, lineHeight: 1.1, margin: 0 },
@@ -142,7 +142,7 @@ export default function BilletteriePage() {
     backBtn: { color: T.sub, padding: "4px 2px", lineHeight: 0, cursor: "pointer" },
     logoutBtn: { fontSize: 11, fontWeight: 600, color: T.muted, border: `1px solid ${T.brd}`, padding: "5px 10px", borderRadius: 8, background: "transparent", cursor: "pointer" },
     stripe:  { display: "flex", height: 2, flexShrink: 0 },
-    main:    { flex: 1, maxWidth: 1200, margin: "0 auto", width: "100%", padding: "20px 16px", display: "flex", flexDirection: "column" as const, gap: 20, transition: "background-color 0.3s" },
+    main:    { flex: 1, maxWidth: "min(1600px, 94vw)", margin: "0 auto", width: "100%", padding: "20px 16px", display: "flex", flexDirection: "column" as const, gap: 20, transition: "background-color 0.3s" },
     // Compteurs
     counters:    { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 },
     counter:     { backgroundColor: T.card, border: `1px solid ${T.brd}`, borderRadius: 16, padding: "16px 8px", textAlign: "center" as const, boxShadow: isDark ? "none" : "0 1px 4px rgba(0,0,0,0.06)" },

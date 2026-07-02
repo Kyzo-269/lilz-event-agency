@@ -337,7 +337,7 @@ export default function NotesPage() {
 
       {/* Header */}
       <header style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: T.headerBg, borderBottom: `1px solid ${T.brd}`, padding: "10px 16px" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: "min(1600px, 94vw)", margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Link href="/dashboard" style={{ color: T.sub, lineHeight: 0 }}>
               <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
@@ -366,7 +366,7 @@ export default function NotesPage() {
       </div>
 
       {/* Compteurs */}
-      <div style={{ maxWidth: 1200, margin: "16px auto 0", width: "100%", padding: "0 16px", display: "flex", gap: 10 }}>
+      <div style={{ maxWidth: "min(1600px, 94vw)", margin: "16px auto 0", width: "100%", padding: "0 16px", display: "flex", gap: 10 }}>
         {[
           { label: "Messages", value: notes.length,                               color: T.txt    },
           { label: "Urgents",  value: notes.filter(n => n.is_urgent).length,      color: "#ff6b6b" },
@@ -381,7 +381,7 @@ export default function NotesPage() {
       </div>
 
       {/* Liste de messages */}
-      <main style={{ flex: 1, maxWidth: 1200, margin: "0 auto", width: "100%", padding: "16px 16px 0" }}>
+      <main style={{ flex: 1, maxWidth: "min(1600px, 94vw)", margin: "0 auto", width: "100%", padding: "16px 16px 0" }}>
         {loading ? (
           <p style={{ textAlign: "center", color: T.sub, fontSize: 13, padding: "40px 0" }}>Chargement…</p>
         ) : displayed.length === 0 ? (
@@ -526,7 +526,7 @@ export default function NotesPage() {
 
       {/* Zone de saisie */}
       <div style={{ position: "sticky", bottom: 0, backgroundColor: T.headerBg, borderTop: `1px solid ${T.brd}`, padding: "12px 16px", paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ maxWidth: "min(1600px, 94vw)", margin: "0 auto" }}>
 
           {/* Répondre à */}
           {replyTarget && (

@@ -161,7 +161,7 @@ export default function MessagesListPage() {
         padding: "10px 16px",
         backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, maxWidth: "min(1600px, 94vw)", margin: "0 auto" }}>
           <Link href="/dashboard" style={{ color: T.sub, lineHeight: 0 }}>
             <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/>
@@ -185,7 +185,7 @@ export default function MessagesListPage() {
         )}
       </div>
 
-      <main style={{ flex: 1, maxWidth: 1200, margin: "0 auto", width: "100%", padding: "16px 16px", paddingBottom: "calc(72px + env(safe-area-inset-bottom))" }}>
+      <main style={{ flex: 1, maxWidth: "min(1600px, 94vw)", margin: "0 auto", width: "100%", padding: "16px 16px", paddingBottom: "calc(72px + env(safe-area-inset-bottom))" }}>
 
         {/* Recherche */}
         <div style={{ marginBottom: 16 }}>

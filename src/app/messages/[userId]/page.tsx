@@ -384,7 +384,7 @@ export default function ConversationPage() {
         padding: "10px 16px",
         backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, maxWidth: "min(1600px, 94vw)", margin: "0 auto" }}>
           <button onClick={() => router.back()}
             style={{ color: T.sub, background: "none", border: "none", cursor: "pointer", padding: 4, lineHeight: 0, flexShrink: 0 }}>
             <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -542,7 +542,7 @@ export default function ConversationPage() {
           </div>
         )}
 
-        <div style={{ display: "flex", gap: 8, alignItems: "flex-end", maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "flex-end", maxWidth: "min(1600px, 94vw)", margin: "0 auto" }}>
 
           {/* Bouton photo */}
           <label style={{

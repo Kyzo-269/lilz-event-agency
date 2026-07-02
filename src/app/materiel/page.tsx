@@ -393,7 +393,7 @@ export default function MaterielPage() {
         padding: "10px 16px",
         transition: "background-color 0.3s, border-color 0.3s",
       }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: "min(1600px, 94vw)", margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Link href="/dashboard" style={{ color: T.textSub, lineHeight: 0, padding: 2 }}>
               <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -419,7 +419,7 @@ export default function MaterielPage() {
         )}
       </div>
 
-      <main style={{ flex: 1, maxWidth: 1200, margin: "0 auto", width: "100%", padding: "16px 16px 0", display: "flex", flexDirection: "column", gap: 14, transition: "background-color 0.3s" }}>
+      <main style={{ flex: 1, maxWidth: "min(1600px, 94vw)", margin: "0 auto", width: "100%", padding: "16px 16px 0", display: "flex", flexDirection: "column", gap: 14, transition: "background-color 0.3s" }}>
 
         {/* ── Barre recherche + bouton ajouter ── */}
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>

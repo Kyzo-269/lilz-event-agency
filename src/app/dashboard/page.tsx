@@ -266,7 +266,7 @@ export default function DashboardPage() {
         padding: "10px 16px",
         transition: "background-color 0.3s, border-color 0.3s",
       }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxWidth: "min(1600px, 94vw)", margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${T.borderMain}`, lineHeight: 0 }}>
               <Image src="/logo.jpg" alt="LIL'Z" width={72} height={72} quality={100}
@@ -350,7 +350,7 @@ export default function DashboardPage() {
       {/* ── Bandeau activation notifications push ── */}
       {(pushState === "unknown" || pushState === "activating" || pushState === "done" || pushState === "denied") && (
         <div style={{
-          maxWidth: 1200, margin: "0 auto", width: "100%",
+          maxWidth: "min(1600px, 94vw)", margin: "0 auto", width: "100%",
           padding: pushState === "done" ? "6px 16px" : "10px 16px",
           transition: "padding 0.3s",
         }}>
@@ -392,7 +392,7 @@ export default function DashboardPage() {
       )}
 
       <main style={{
-        maxWidth: 960,
+        maxWidth: "min(1600px, 94vw)",
         margin: "0 auto",
         width: "100%",
         padding: "20px 16px 40px",
