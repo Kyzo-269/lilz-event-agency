@@ -245,7 +245,7 @@ export default function EquipePage() {
             <p style={{ color: T.sub, fontSize: 13, margin: 0 }}>Aucun membre trouvé</p>
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", alignItems: "start", gap: 8 }}>
             {members.map((m, i) => {
               const rs = ROLE_STYLE[m.role] ?? { color: "#888", bg: "#111", border: "#333" };
               const statut = (m.statut_presence ?? "Hors ligne") as StatutPresence;

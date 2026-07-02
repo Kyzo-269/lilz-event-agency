@@ -305,7 +305,7 @@ export default function BilletteriePage() {
               </p>
             </div>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", alignItems: "start", gap: 10 }}>
               {tickets.map(ticket => {
                 const st = STATUS_STYLE[ticket.statut];
                 return (
